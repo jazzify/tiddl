@@ -1,38 +1,39 @@
-import os
-import typer
 import asyncio
-
-from pathlib import Path
+import os
 from logging import getLogger
+from pathlib import Path
+from typing import Annotated
+
+import typer
 from rich.live import Live
 
-from typing_extensions import Annotated
-
-from tiddl.core.metadata import add_track_metadata, add_video_metadata, Cover
-from tiddl.core.api import ApiError
-from tiddl.core.api.models import Album, Track, Video, AlbumItemsCredits
-from tiddl.core.utils.format import format_template
-from tiddl.core.utils.m3u import save_tracks_to_m3u
+from tiddl.cli.commands import subcommands
+from tiddl.cli.commands.auth import refresh
 from tiddl.cli.config import (
+    ARTIST_SINGLES_FILTER_LITERAL,
+    ATMOS_FILTER_LITERAL,
     CONFIG,
     TRACK_QUALITY_LITERAL,
-    VIDEO_QUALITY_LITERAL,
-    ARTIST_SINGLES_FILTER_LITERAL,
     VALID_M3U_RESOURCE_LITERAL,
+    VIDEO_QUALITY_LITERAL,
     VIDEOS_FILTER_LITERAL,
-    ATMOS_FILTER_LITERAL,
 )
-from tiddl.cli.utils.resource import TidalResource
 from tiddl.cli.ctx import Context
-from tiddl.cli.commands.auth import refresh
-from tiddl.cli.commands.subcommands import register_subcommands
-
+from tiddl.cli.utils.resource import TidalResource
+from tiddl.core.api import ApiError
+from tiddl.core.api.models import Album, AlbumItemsCredits, Track, Video
+from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
+from tiddl.core.utils.format import format_template
+from tiddl.core.utils.m3u import save_tracks_to_m3u
 
 from .downloader import Downloader
 from .output import RichOutput
 
 download_command = typer.Typer(name="download")
-register_subcommands(download_command)
+download_command.add_typer(subcommands.url_subcommand)
+download_command.add_typer(subcommands.fav_subcommand)
+download_command.add_typer(subcommands.search_subcommand)
+
 
 log = getLogger(__name__)
 
@@ -153,15 +154,15 @@ def download_callback(
         try:
             with open(lrc_file_path, "w", encoding="utf-8") as f:
                 f.write(lyrics)
-        except Exception as e:
+        except FileExistsError as e:
             log.error(
-                f"Failed to write LRC file for track {track.title} (ID: {track.id}): {e}"
+                f"[DOWNLOAD_CALLBACK] Failed to write LRC file for track {track.title} (ID: {track.id}): {e}"
             )
 
     def save_m3u(
         resource_type: VALID_M3U_RESOURCE_LITERAL,
         filename: str,
-        tracks_with_path: list[tuple[Path, Track]],
+        tracks_with_path: list[tuple[Path | None, Track | Video]],
     ):
         if not CONFIG.m3u.save:
             return
@@ -225,13 +226,14 @@ def download_callback(
                 self,
                 date: str = "",
                 artist: str = "",
-                credits: list[AlbumItemsCredits.ItemWithCredits.CreditsEntry] = [],
+                credits: list[AlbumItemsCredits.ItemWithCredits.CreditsEntry]
+                | None = None,
                 cover: Cover | None = None,
                 album_review: str = "",
             ) -> None:
                 self.date = date
                 self.artist = artist
-                self.credits = credits
+                self.credits = credits if credits else []
                 self.cover = cover
                 self.album_review = album_review
 
@@ -267,7 +269,7 @@ def download_callback(
                                 lyrics_subtitles = ctx.obj.api.get_track_lyrics(
                                     item.id
                                 ).subtitles
-                            except Exception as e:
+                            except ApiError as e:
                                 log.error(e)
 
                         if (
@@ -301,10 +303,7 @@ def download_callback(
                         add_video_metadata(path=download_path, video=item)
 
                 if download_path and CONFIG.download.update_mtime:
-                    try:
-                        os.utime(download_path, None)
-                    except Exception:
-                        log.warning(f"could not update mtime for {download_path}")
+                    os.utime(download_path, None)
 
                 return download_path, item
 
@@ -325,7 +324,7 @@ def download_callback(
                         album_review = ctx.obj.api.get_album_review(
                             album_id=resource.id
                         ).normalized_text()
-                    except Exception as e:
+                    except ApiError as e:
                         log.error(e)
 
                 while True:
@@ -412,7 +411,6 @@ def download_callback(
             # then we would be able to reuse the logic in the export command
 
             match resource.type:
-
                 case "track":
                     track = ctx.obj.api.get_track(resource.id)
                     album = ctx.obj.api.get_album(track.album.id)

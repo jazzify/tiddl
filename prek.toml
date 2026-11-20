@@ -32,10 +32,17 @@ hooks = [
 repo = "local"
 
 [[repos.hooks]]
-id = "ruff"
-name = "ruff"
+id = "ruff-isort"
+name = "ruff (import sort)"
 language = "system"
-entry = "uv run ruff check"
+entry = "uv run ruff check --select I --fix"
+types = ["python"]
+
+[[repos.hooks]]
+id = "ruff-format"
+name = "ruff format"
+language = "system"
+entry = "uv run ruff format"
 types = ["python"]
 
 [[repos.hooks]]

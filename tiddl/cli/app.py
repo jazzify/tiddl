@@ -1,17 +1,19 @@
-import typer
 import logging
-from rich.console import Console
-from typing_extensions import Annotated
+from typing import Annotated
 
+import typer
+from rich.console import Console
+
+from tiddl.cli import commands
 from tiddl.cli.config import APP_PATH, CONFIG
-from tiddl.cli.ctx import ContextObject, Context
-from tiddl.cli.commands import register_commands
+from tiddl.cli.ctx import Context, ContextObject
 from tiddl.core.utils.ffmpeg import is_ffmpeg_installed as ifs
 
 log = logging.getLogger("tiddl")
 
 app = typer.Typer(name="tiddl", no_args_is_help=True, rich_markup_mode="rich")
-register_commands(app)
+app.add_typer(commands.auth_command)
+app.add_typer(commands.download_command)
 
 VERSION = "v3.4.4"
 
@@ -32,13 +34,6 @@ def callback(
         ),
     ] = CONFIG.debug,
 ):
-    f"""
-    tiddl {VERSION} - download tidal tracks \u266b
-
-    [link=https://github.com/oskvr37/tiddl]github (https://github.com/oskvr37/tiddl)[/link]
-    [link=https://buymeacoffee.com/oskvr][yellow]buy me a coffee (https://buymeacoffee.com/oskvr)[/link]
-    """
-
     log.debug(f"{VERSION=}")
     log.debug(f"{ctx.params=}")
 
@@ -56,6 +51,5 @@ def callback(
 
     if not is_ffmpeg_installed:
         ctx.obj.console.print(
-            "[yellow]WARNING ffmpeg is not installed, tiddl might not work properly, "
-            + "[link=https://github.com/oskvr37/tiddl/blob/main/README.md#installation]read README.md (https://github.com/oskvr37/tiddl/blob/main/README.md#installation)[/]"
+            "[yellow]WARNING ffmpeg is not installed, tiddl might not work properly"
         )
