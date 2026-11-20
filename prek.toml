@@ -1,0 +1,52 @@
+[[repos]]
+repo = "builtin"
+hooks = [
+    { id = "check-json" },
+    { id = "check-yaml" },
+    { id = "check-toml" },
+    { id = "check-xml" },
+    { id = "end-of-file-fixer" },
+    { id = "trailing-whitespace" },
+    { id = "mixed-line-ending", args = [
+        "--fix=lf",
+    ] },
+    { id = "check-merge-conflict", args = [
+        "--assume-in-merge",
+    ] },
+    { id = "detect-private-key" },
+]
+
+
+[[repos]]
+repo = "https://github.com/commitizen-tools/commitizen"
+rev = "v4.19.4"
+hooks = [
+    { id = "commitizen" },
+    { id = "commitizen-branch", stages = [
+        "pre-push",
+    ] },
+]
+
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "ruff"
+name = "ruff"
+language = "system"
+entry = "uv run ruff check"
+types = ["python"]
+
+[[repos.hooks]]
+id = "ty"
+name = "ty check"
+language = "system"
+entry = "uv run ty check"
+types = ["python"]
+
+[[repos.hooks]]
+id = "bandit"
+name = "bandit checks"
+language = "system"
+entry = "uv run bandit"
