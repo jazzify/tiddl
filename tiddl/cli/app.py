@@ -5,8 +5,9 @@ import typer
 from rich.console import Console
 
 from tiddl.cli import commands
-from tiddl.cli.config import APP_PATH, CONFIG
 from tiddl.cli.ctx import Context, ContextObject
+from tiddl.cli.settings import APP_PATH, CONFIG
+from tiddl.core.constants import VERSION
 from tiddl.core.utils.ffmpeg import is_ffmpeg_installed as ifs
 
 log = logging.getLogger("tiddl")
@@ -14,8 +15,6 @@ log = logging.getLogger("tiddl")
 app = typer.Typer(name="tiddl", no_args_is_help=True, rich_markup_mode="rich")
 app.add_typer(commands.auth_command)
 app.add_typer(commands.download_command)
-
-VERSION = "v3.4.4"
 
 
 @app.callback()

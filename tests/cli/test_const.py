@@ -2,7 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from tiddl.cli.const import APP_DIR_NAME, ENV_KEY, get_app_path
+from tiddl.cli.settings import get_app_path
+from tiddl.core.constants import APP_DIR_NAME, ENV_KEY
 
 
 def test_env_key_overrides(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):

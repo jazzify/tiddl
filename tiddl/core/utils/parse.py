@@ -6,8 +6,7 @@ from pydantic import BaseModel
 from requests import Session
 
 from tiddl.core.api.models import TrackStream, VideoStream
-
-DOLBY_CODECS = ["eac3", "ac4"]
+from tiddl.core.constants import DOLBY_CODECS
 
 
 def parse_manifest_XML(xml_content: str):

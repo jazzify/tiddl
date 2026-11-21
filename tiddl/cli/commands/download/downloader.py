@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 import aiofiles
 import aiohttp
 
-from tiddl.cli.config import (
+from tiddl.cli.settings import (
     ChoiceFilterAtmos,
     ChoiceFilterVideos,
 )
@@ -15,6 +15,13 @@ from tiddl.cli.utils.download import get_existing_track_filename
 from tiddl.cli.utils.path import resolve_existing_path_case
 from tiddl.core.api import TidalAPI
 from tiddl.core.api.models import Track, Video
+from tiddl.core.constants import (
+    CHUNK_SIZE,
+    QUALITIES_TRACK,
+    QUALITIES_VIDEO,
+    QUALITY_COLOR_TRACK,
+    QUALITY_COLOR_VIDEO,
+)
 from tiddl.core.exceptions import ApiError
 from tiddl.core.types import (
     ChoiceQualityTrack,
@@ -23,30 +30,11 @@ from tiddl.core.types import (
     TrackQuality,
 )
 from tiddl.core.utils import parse_track_stream, parse_video_stream
-from tiddl.core.utils.const import (
-    track_qualities,
-    video_qualities,
-)
 from tiddl.core.utils.ffmpeg import convert_to_mp4, extract_flac
 
 from .output import RichOutput
 
 log = getLogger(__name__)
-
-CHUNK_SIZE = 1024**2
-
-track_qualities_color: dict[TrackQuality, str] = {
-    "LOW": "[gray]96 kbps",
-    "HIGH": "[gray]320 kbps",
-    "LOSSLESS": "[cyan]",
-    "HI_RES_LOSSLESS": "[yellow]",
-}
-
-video_qualities_color: dict[StreamVideoQuality, str] = {
-    "LOW": "[gray]360p",
-    "MEDIUM": "[cyan]720p",
-    "HIGH": "[yellow]1080p",
-}
 
 
 class Downloader:
@@ -79,8 +67,8 @@ class Downloader:
         self.api = tidal_api
         self.rich_output = rich_output
         self.semaphore = asyncio.Semaphore(threads_count)
-        self.track_quality = track_qualities[track_quality]
-        self.video_quality = video_qualities[video_quality]
+        self.track_quality = QUALITIES_TRACK[track_quality]
+        self.video_quality = QUALITIES_VIDEO[video_quality]
         self.videos_filter = videos_filter
         self.skip_existing = skip_existing
         self.download_path = download_path
@@ -182,7 +170,7 @@ class Downloader:
                 urls, _ = parse_track_stream(stream)
                 download_path = self.get_path(self.download_path, filename)
 
-                quality_string = track_qualities_color[stream.audioQuality]
+                quality_string = QUALITY_COLOR_TRACK[stream.audioQuality]
 
                 if (
                     stream.audioQuality in ["HI_RES_LOSSLESS", "LOSSLESS"]
@@ -205,7 +193,7 @@ class Downloader:
                 download_path = self.get_path(self.download_path, filename).with_suffix(
                     ext
                 )
-                quality_string = video_qualities_color[stream.videoQuality]
+                quality_string = QUALITY_COLOR_VIDEO[stream.videoQuality]
 
             task_id = self.rich_output.download_start(
                 f"[{vibrant_color}]{item.title} {quality_string}"

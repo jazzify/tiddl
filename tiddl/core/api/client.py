@@ -13,12 +13,9 @@ from requests_cache import (
     StrOrPath,
 )
 
+from tiddl.core.constants import API_URL, MAX_RETRIES, RETRY_DELAY
 from tiddl.core.exceptions import ApiError
 from tiddl.core.types import T
-
-API_URL = "https://api.tidal.com/v1"
-MAX_RETRIES = 5
-RETRY_DELAY = 2
 
 log = getLogger(__name__)
 

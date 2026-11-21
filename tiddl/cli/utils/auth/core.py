@@ -1,12 +1,9 @@
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.cli.config import APP_PATH
+from tiddl.cli.settings import AUTH_DATA_FILE
 
 from .models import AuthData
-
-AUTH_DATA_FILE = APP_PATH / "auth.json"
-
 
 log = getLogger(__name__)
 

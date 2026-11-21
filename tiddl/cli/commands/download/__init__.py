@@ -9,14 +9,14 @@ from rich.live import Live
 
 from tiddl.cli.commands import subcommands
 from tiddl.cli.commands.auth import refresh
-from tiddl.cli.config import (
+from tiddl.cli.ctx import Context
+from tiddl.cli.settings import (
     CONFIG,
     ChoiceFilterArtistSingles,
     ChoiceFilterAtmos,
     ChoiceFilterVideos,
     ChoiceResourceM3U,
 )
-from tiddl.cli.ctx import Context
 from tiddl.cli.utils.resource import TidalResource
 from tiddl.core.api.models import Album, AlbumItemsCredits, Track, Video
 from tiddl.core.exceptions import ApiError

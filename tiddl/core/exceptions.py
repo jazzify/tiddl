@@ -1,6 +1,10 @@
 from typing import Any
 
 
+class FFmpegError(RuntimeError):
+    pass
+
+
 # Base Exception
 class AppException(Exception):
     def __init__(self, key: str, message: str, extra: dict[str, Any] | None = None):

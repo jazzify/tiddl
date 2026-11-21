@@ -1,9 +1,7 @@
 import subprocess  # nosec B404
 from pathlib import Path
 
-
-class FFmpegError(RuntimeError):
-    pass
+from tiddl.core.exceptions import FFmpegError
 
 
 def run(cmd: list[str]) -> subprocess.CompletedProcess:

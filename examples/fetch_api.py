@@ -1,4 +1,4 @@
-from tiddl.cli.const import APP_PATH
+from tiddl.cli.settings import APP_PATH
 
 # we will utilize some functions from tiddl cli
 # and use `APP_PATH` that is located at our /home_directory/.tiddl

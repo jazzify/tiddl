@@ -1,10 +1,16 @@
 from logging import getLogger
+from os import environ
 from pathlib import Path
 from tomllib import loads as parse_toml
 
 from pydantic import BaseModel, field_validator
 
-from tiddl.cli.const import APP_PATH
+from tiddl.core.constants import (
+    APP_DIR_NAME,
+    CONFIG_FILENAME,
+    DEFAULT_DOWNLOAD_PATH,
+    ENV_KEY,
+)
 from tiddl.core.types import (
     ChoiceFilterArtistSingles,
     ChoiceFilterAtmos,
@@ -14,10 +20,6 @@ from tiddl.core.types import (
     ChoiceResourceCover,
     ChoiceResourceM3U,
 )
-
-CONFIG_FILENAME = "config.toml"
-DEFAULT_DOWNLOAD_PATH = Path.home() / "Music" / "tiddl"
-
 
 log = getLogger(__name__)
 
@@ -124,5 +126,18 @@ def load_config_file(config_file: Path) -> Config:
     return config
 
 
+def get_app_path(env_key: str = ENV_KEY) -> Path:
+    if environ.get(env_key):
+        return Path(environ[env_key])
+    return Path.home() / APP_DIR_NAME
+
+
+def create_app_path() -> Path:
+    app_path = get_app_path()
+    app_path.mkdir(exist_ok=True)
+    return app_path
+
+
+APP_PATH = create_app_path()
+AUTH_DATA_FILE = APP_PATH / "auth.json"
 CONFIG = load_config_file(APP_PATH / CONFIG_FILENAME)
-log.debug(f"{CONFIG=}")

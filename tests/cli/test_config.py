@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pytest import raises
 
-from tiddl.cli.config import CONFIG_FILENAME, Config, load_config_file
+from tiddl.cli.settings import CONFIG_FILENAME, Config, load_config_file
 
 
 def write_config(tmp_path: Path, content: str) -> Path:

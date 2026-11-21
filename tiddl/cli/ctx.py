@@ -4,7 +4,7 @@ from time import time
 import typer
 from rich.console import Console
 
-from tiddl.cli.config import APP_PATH
+from tiddl.cli.settings import APP_PATH
 from tiddl.cli.utils.auth.core import load_auth_data, save_auth_data
 from tiddl.cli.utils.resource import TidalResource
 from tiddl.core.api import TidalAPI, TidalClient

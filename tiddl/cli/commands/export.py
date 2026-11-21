@@ -5,8 +5,6 @@ from rich.console import Console
 
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.commands.subcommands import url_subcommand
-
-# from typing_extensions import Annotated
 from tiddl.cli.ctx import Context
 
 export_command = typer.Typer(name="export")
