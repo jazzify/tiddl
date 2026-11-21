@@ -10,19 +10,18 @@ from rich.live import Live
 from tiddl.cli.commands import subcommands
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.config import (
-    ARTIST_SINGLES_FILTER_LITERAL,
-    ATMOS_FILTER_LITERAL,
     CONFIG,
-    TRACK_QUALITY_LITERAL,
-    VALID_M3U_RESOURCE_LITERAL,
-    VIDEO_QUALITY_LITERAL,
-    VIDEOS_FILTER_LITERAL,
+    ChoiceFilterArtistSingles,
+    ChoiceFilterAtmos,
+    ChoiceFilterVideos,
+    ChoiceResourceM3U,
 )
 from tiddl.cli.ctx import Context
 from tiddl.cli.utils.resource import TidalResource
 from tiddl.core.api.models import Album, AlbumItemsCredits, Track, Video
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
+from tiddl.core.types import ChoiceQualityTrack, ChoiceQualityVideo
 from tiddl.core.utils.format import format_template
 from tiddl.core.utils.m3u import save_tracks_to_m3u
 
@@ -42,14 +41,14 @@ log = getLogger(__name__)
 def download_callback(
     ctx: Context,
     TRACK_QUALITY: Annotated[
-        TRACK_QUALITY_LITERAL,
+        ChoiceQualityTrack,
         typer.Option(
             "--track-quality",
             "-q",
         ),
     ] = CONFIG.download.track_quality,
     VIDEO_QUALITY: Annotated[
-        VIDEO_QUALITY_LITERAL,
+        ChoiceQualityVideo,
         typer.Option(
             "--video-quality",
             "-vq",
@@ -105,7 +104,7 @@ def download_callback(
         ),
     ] = "",
     SINGLES_FILTER: Annotated[
-        ARTIST_SINGLES_FILTER_LITERAL,
+        ChoiceFilterArtistSingles,
         typer.Option(
             "--singles",
             "-s",
@@ -113,7 +112,7 @@ def download_callback(
         ),
     ] = CONFIG.download.singles_filter,
     VIDEOS_FILTER: Annotated[
-        VIDEOS_FILTER_LITERAL,
+        ChoiceFilterVideos,
         typer.Option(
             "--videos",
             "-vid",
@@ -129,7 +128,7 @@ def download_callback(
         ),
     ] = False,
     DOLBY_ATMOS_FILTER: Annotated[
-        ATMOS_FILTER_LITERAL,
+        ChoiceFilterAtmos,
         typer.Option(
             "--dolby-atmos",
             "-da",
@@ -160,7 +159,7 @@ def download_callback(
             )
 
     def save_m3u(
-        resource_type: VALID_M3U_RESOURCE_LITERAL,
+        resource_type: ChoiceResourceM3U,
         filename: str,
         tracks_with_path: list[tuple[Path | None, Track | Video]],
     ):
@@ -183,7 +182,7 @@ def download_callback(
         )
 
     def get_item_quality(item: Track | Video):
-        def predict_item_quality() -> TRACK_QUALITY_LITERAL | VIDEO_QUALITY_LITERAL:
+        def predict_item_quality() -> ChoiceQualityTrack | ChoiceQualityVideo:
             if isinstance(item, Track):
                 if TRACK_QUALITY in ["low", "normal"]:
                     return TRACK_QUALITY

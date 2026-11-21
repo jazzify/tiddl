@@ -3,12 +3,7 @@ from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel
 
-TrackQuality = Literal["LOW", "HIGH", "LOSSLESS", "HI_RES_LOSSLESS"]
-
-# audio_only is not stable
-StreamVideoQuality = Literal["AUDIO_ONLY", "LOW", "MEDIUM", "HIGH"]
-
-MediaMetadataTags = Literal["LOSSLESS", "HIRES_LOSSLESS", "DOLBY_ATMOS"]
+from tiddl.core.types import MediaMetadataTags, TrackQuality
 
 
 class Track(BaseModel):

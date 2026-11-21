@@ -7,16 +7,23 @@ from tempfile import NamedTemporaryFile
 import aiofiles
 import aiohttp
 
-from tiddl.cli.config import ATMOS_FILTER_LITERAL, VIDEOS_FILTER_LITERAL
+from tiddl.cli.config import (
+    ChoiceFilterAtmos,
+    ChoiceFilterVideos,
+)
 from tiddl.cli.utils.download import get_existing_track_filename
 from tiddl.cli.utils.path import resolve_existing_path_case
 from tiddl.core.api import TidalAPI
-from tiddl.core.api.models import StreamVideoQuality, Track, TrackQuality, Video
+from tiddl.core.api.models import Track, Video
 from tiddl.core.exceptions import ApiError
+from tiddl.core.types import (
+    ChoiceQualityTrack,
+    ChoiceQualityVideo,
+    StreamVideoQuality,
+    TrackQuality,
+)
 from tiddl.core.utils import parse_track_stream, parse_video_stream
 from tiddl.core.utils.const import (
-    TRACK_QUALITY_LITERAL,
-    VIDEO_QUALITY_LITERAL,
     track_qualities,
     video_qualities,
 )
@@ -48,26 +55,26 @@ class Downloader:
     semaphore: asyncio.Semaphore
     track_quality: TrackQuality
     video_quality: StreamVideoQuality
-    videos_filter: VIDEOS_FILTER_LITERAL
+    videos_filter: ChoiceFilterVideos
     skip_existing: bool
     download_path: Path
     scan_path: Path
     match_existing_path_case: bool
-    dolby_atmos_filter: ATMOS_FILTER_LITERAL
+    dolby_atmos_filter: ChoiceFilterAtmos
 
     def __init__(
         self,
         tidal_api: TidalAPI,
         threads_count: int,
         rich_output: RichOutput,
-        track_quality: TRACK_QUALITY_LITERAL,
-        video_quality: VIDEO_QUALITY_LITERAL,
-        videos_filter: VIDEOS_FILTER_LITERAL,
+        track_quality: ChoiceQualityTrack,
+        video_quality: ChoiceQualityVideo,
+        videos_filter: ChoiceFilterVideos,
         skip_existing: bool,
         download_path: Path,
         scan_path: Path,
         match_existing_path_case: bool = False,
-        dolby_atmos_filter: ATMOS_FILTER_LITERAL = "none",
+        dolby_atmos_filter: ChoiceFilterAtmos = "none",
     ) -> None:
         self.api = tidal_api
         self.rich_output = rich_output

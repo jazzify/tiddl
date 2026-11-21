@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from tiddl.core.api.models.base import StreamVideoQuality
 from tiddl.core.metadata import add_video_metadata
+from tiddl.core.types import StreamVideoQuality
 from tiddl.core.utils import get_video_stream_data
 from tiddl.core.utils.ffmpeg import convert_to_mp4, is_ffmpeg_installed
 

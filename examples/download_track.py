@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from tiddl.core.api.models import TrackQuality
 from tiddl.core.metadata import add_track_metadata
+from tiddl.core.types import TrackQuality
 from tiddl.core.utils import get_track_stream_data
 
 # we reuse Tidal API from another example

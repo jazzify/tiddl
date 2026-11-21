@@ -3,9 +3,8 @@ from collections.abc import Callable
 from logging import getLogger
 from pathlib import Path
 from time import sleep
-from typing import Any, Optional, TypeVar
+from typing import Any, Optional
 
-from pydantic import BaseModel
 from requests.exceptions import JSONDecodeError
 from requests.structures import CaseInsensitiveDict
 from requests_cache import (
@@ -15,8 +14,7 @@ from requests_cache import (
 )
 
 from tiddl.core.exceptions import ApiError
-
-T = TypeVar("T", bound=BaseModel)
+from tiddl.core.types import T
 
 API_URL = "https://api.tidal.com/v1"
 MAX_RETRIES = 5

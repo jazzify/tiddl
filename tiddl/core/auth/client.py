@@ -1,11 +1,11 @@
 import base64
 import logging
 from os import environ
-from typing import Any, TypeAlias
 
 from requests import request
 
 from tiddl.core.exceptions import AuthClientError
+from tiddl.core.types import JSON
 
 log = logging.getLogger("tiddl")
 
@@ -33,8 +33,6 @@ def get_auth_credentials() -> tuple[str, str]:
 
 AUTH_URL = "https://auth.tidal.com/v1/oauth2"
 CLIENT_ID, CLIENT_SECRET = get_auth_credentials()
-
-JSON: TypeAlias = dict[str, Any]
 
 
 class AuthClient:

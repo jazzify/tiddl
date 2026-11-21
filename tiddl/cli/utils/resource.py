@@ -1,9 +1,9 @@
-from typing import Literal, get_args
+from typing import get_args
 from urllib.parse import urlparse
 
 from pydantic import BaseModel
 
-ResourceTypeLiteral = Literal["track", "video", "album", "playlist", "artist", "mix"]
+from tiddl.core.types import ResourceTypeLiteral
 
 
 class TidalResource(BaseModel):

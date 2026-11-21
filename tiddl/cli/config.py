@@ -1,21 +1,23 @@
 from logging import getLogger
 from pathlib import Path
 from tomllib import loads as parse_toml
-from typing import Literal
 
 from pydantic import BaseModel, field_validator
 
 from tiddl.cli.const import APP_PATH
-from tiddl.core.utils.const import TRACK_QUALITY_LITERAL, VIDEO_QUALITY_LITERAL
+from tiddl.core.types import (
+    ChoiceFilterArtistSingles,
+    ChoiceFilterAtmos,
+    ChoiceFilterVideos,
+    ChoiceQualityTrack,
+    ChoiceQualityVideo,
+    ChoiceResourceCover,
+    ChoiceResourceM3U,
+)
 
 CONFIG_FILENAME = "config.toml"
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Music" / "tiddl"
 
-ARTIST_SINGLES_FILTER_LITERAL = Literal["none", "only", "include"]
-VALID_M3U_RESOURCE_LITERAL = Literal["album", "playlist", "mix"]
-VALID_RESOURCE_COVER_SAVE_LITERAL = Literal["track", "album", "playlist"]
-VIDEOS_FILTER_LITERAL = Literal["none", "only", "allow"]
-ATMOS_FILTER_LITERAL = Literal["none", "only", "allow"]
 
 log = getLogger(__name__)
 
@@ -35,7 +37,7 @@ class Config(BaseModel):
     class CoverConfig(BaseModel):
         save: bool = False
         size: int = 1280
-        allowed: list[VALID_RESOURCE_COVER_SAVE_LITERAL] = []
+        allowed: list[ChoiceResourceCover] = []
 
         class CoverTemplatesConfig(BaseModel):
             track: str = ""
@@ -47,19 +49,19 @@ class Config(BaseModel):
     cover: CoverConfig = CoverConfig()
 
     class DownloadConfig(BaseModel):
-        track_quality: TRACK_QUALITY_LITERAL = "high"
-        video_quality: VIDEO_QUALITY_LITERAL = "fhd"
+        track_quality: ChoiceQualityTrack = "max"
+        video_quality: ChoiceQualityVideo = "fhd"
         skip_existing: bool = True
         threads_count: int = 4
         download_path: Path = DEFAULT_DOWNLOAD_PATH
         scan_path: Path = DEFAULT_DOWNLOAD_PATH
-        singles_filter: ARTIST_SINGLES_FILTER_LITERAL = "none"
-        videos_filter: VIDEOS_FILTER_LITERAL = "none"
+        singles_filter: ChoiceFilterArtistSingles = "none"
+        videos_filter: ChoiceFilterVideos = "none"
         update_mtime: bool = False
         rewrite_metadata: bool = False
         write_lrc_file: bool = False
         match_existing_path_case: bool = False
-        atmos_filter: ATMOS_FILTER_LITERAL = "none"
+        atmos_filter: ChoiceFilterAtmos = "none"
 
         def model_post_init(self, __context):
             # set scan path to download path when download path is non default
@@ -79,7 +81,7 @@ class Config(BaseModel):
     class M3UConfig(BaseModel):
         # m3u playlists
         save: bool = False
-        allowed: list[VALID_M3U_RESOURCE_LITERAL] = []
+        allowed: list[ChoiceResourceM3U] = []
 
         class M3UTemplatesConfig(BaseModel):
             album: str = ""

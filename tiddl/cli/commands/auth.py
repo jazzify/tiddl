@@ -1,9 +1,9 @@
 from datetime import datetime
 from time import sleep, time
+from typing import Annotated
 
 import typer
 from rich.console import Console
-from typing_extensions import Annotated
 
 from tiddl.cli.utils.auth.core import AuthData, load_auth_data, save_auth_data
 from tiddl.core.auth import AuthAPI

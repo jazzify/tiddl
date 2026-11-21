@@ -1,6 +1,8 @@
-from typing import Literal, TypeAlias
+from typing import Literal
 
 from requests_cache import DO_NOT_CACHE, EXPIRE_IMMEDIATELY
+
+from tiddl.core.types import ID, StreamVideoQuality, TrackQuality
 
 from .client import TidalClient
 from .models.base import (
@@ -21,14 +23,10 @@ from .models.resources import (
     Album,
     Artist,
     Playlist,
-    StreamVideoQuality,
     Track,
-    TrackQuality,
     Video,
 )
 from .models.review import AlbumReview
-
-ID: TypeAlias = str | int
 
 
 class Limits:

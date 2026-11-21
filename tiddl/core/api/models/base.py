@@ -2,12 +2,12 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel
 
+from tiddl.core.types import StreamVideoQuality, TrackQuality
+
 from .resources import (
     Album,
     Playlist,
-    StreamVideoQuality,
     Track,
-    TrackQuality,
     Video,
 )
 

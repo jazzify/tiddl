@@ -3,9 +3,9 @@ from .format import format_template
 from .parse import parse_track_stream, parse_video_stream
 
 __all__ = [
-    "parse_track_stream",
-    "parse_video_stream",
+    "format_template",
     "get_track_stream_data",
     "get_video_stream_data",
-    "format_template",
+    "parse_track_stream",
+    "parse_video_stream",
 ]

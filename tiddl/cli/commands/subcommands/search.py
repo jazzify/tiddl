@@ -1,7 +1,8 @@
+from typing import Annotated
+
 import typer
 from rich.panel import Panel
 from rich.table import Table
-from typing_extensions import Annotated
 
 from tiddl.cli.ctx import Context
 from tiddl.cli.utils.resource import TidalResource
