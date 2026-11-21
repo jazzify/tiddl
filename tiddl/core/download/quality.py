@@ -7,17 +7,8 @@ def get_item_quality(
     track_quality: ChoiceQualityTrack,
     video_quality: ChoiceQualityVideo,
 ) -> str:
-    def predict_item_quality() -> ChoiceQualityTrack | ChoiceQualityVideo:
-        if isinstance(item, Track):
-            if track_quality in ["low", "high"]:
-                return track_quality
-            elif track_quality == "max" and (
-                "HIRES_LOSSLESS" not in item.mediaMetadata.tags
-            ):
-                return "high"
-            return track_quality
-        elif isinstance(item, Video):
-            # TODO: add missing Video.quality literals so this function can work properly
-            return video_quality
-
-    return predict_item_quality().upper()
+    if isinstance(item, Track):
+        if track_quality == "max" and "HIRES_LOSSLESS" not in item.mediaMetadata.tags:
+            return "lossless".upper()
+        return track_quality.upper()
+    return video_quality.upper()

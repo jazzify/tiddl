@@ -1,6 +1,5 @@
 import asyncio
 import os
-from dataclasses import dataclass, field
 from logging import getLogger
 from pathlib import Path
 from typing import Annotated
@@ -16,10 +15,14 @@ from tiddl.core.download import Downloader
 from tiddl.core.download.lrc import write_lrc_file
 from tiddl.core.download.quality import get_item_quality
 from tiddl.core.exceptions import ApiError
-from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
+from tiddl.core.metadata import (
+    Cover,
+    ItemMetadata,
+    add_track_metadata,
+    add_video_metadata,
+)
 from tiddl.core.models import (
     Album,
-    AlbumItemsCredits,
     DownloadOptions,
     TidalResource,
     Track,
@@ -44,17 +47,6 @@ download_command.add_typer(subcommands.search_subcommand)
 
 
 log = getLogger(__name__)
-
-
-@dataclass
-class ItemMetadata:
-    date: str = ""
-    artist: str = ""
-    credits: list[AlbumItemsCredits.ItemWithCredits.CreditsEntry] = field(
-        default_factory=list
-    )
-    cover: Cover | None = None
-    album_review: str = ""
 
 
 @download_command.callback(no_args_is_help=True)
