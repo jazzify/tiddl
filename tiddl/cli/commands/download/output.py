@@ -15,7 +15,7 @@ from rich.progress import (
 )
 from rich.text import Text
 
-from tiddl.common.cli.exceptions import CLIValidationException
+from tiddl.core.exceptions import CLIValidationException
 
 
 class TimeElapsedColumn(ProgressColumn):

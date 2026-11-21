@@ -6,7 +6,8 @@ from rich.console import Console
 from typing_extensions import Annotated
 
 from tiddl.cli.utils.auth.core import AuthData, load_auth_data, save_auth_data
-from tiddl.core.auth import AuthAPI, AuthClientError
+from tiddl.core.auth import AuthAPI
+from tiddl.core.exceptions import AuthClientError
 
 console = Console()
 

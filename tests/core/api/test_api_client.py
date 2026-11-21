@@ -5,7 +5,8 @@ import pytest
 from pydantic import BaseModel
 from pytest_mock import MockerFixture
 
-from tiddl.core.api.client import ApiError, TidalClient
+from tiddl.core.api.client import TidalClient
+from tiddl.core.exceptions import ApiError
 
 
 def test_tidal_client_init(mocker: MockerFixture):

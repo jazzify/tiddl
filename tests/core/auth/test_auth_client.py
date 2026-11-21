@@ -2,7 +2,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from tiddl.core.auth.client import AuthClient
-from tiddl.core.auth.exceptions import AuthClientError
+from tiddl.core.exceptions import AuthClientError
 
 
 def test_get_device_auth_calls_request(mocker: MockerFixture):

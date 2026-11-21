@@ -5,7 +5,7 @@ from typing import Any, TypeAlias
 
 from requests import request
 
-from tiddl.core.auth.exceptions import AuthClientError
+from tiddl.core.exceptions import AuthClientError
 
 log = logging.getLogger("tiddl")
 

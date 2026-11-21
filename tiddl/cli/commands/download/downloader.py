@@ -10,8 +10,9 @@ import aiohttp
 from tiddl.cli.config import ATMOS_FILTER_LITERAL, VIDEOS_FILTER_LITERAL
 from tiddl.cli.utils.download import get_existing_track_filename
 from tiddl.cli.utils.path import resolve_existing_path_case
-from tiddl.core.api import ApiError, TidalAPI
+from tiddl.core.api import TidalAPI
 from tiddl.core.api.models import StreamVideoQuality, Track, TrackQuality, Video
+from tiddl.core.exceptions import ApiError
 from tiddl.core.utils import parse_track_stream, parse_video_stream
 from tiddl.core.utils.const import (
     TRACK_QUALITY_LITERAL,

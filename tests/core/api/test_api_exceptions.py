@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from tiddl.core.api.exceptions import ApiError
+from tiddl.core.exceptions import ApiError
 
 
 def test_api_error_attributes():

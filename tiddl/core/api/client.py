@@ -14,7 +14,7 @@ from requests_cache import (
     StrOrPath,
 )
 
-from .exceptions import ApiError
+from tiddl.core.exceptions import ApiError
 
 T = TypeVar("T", bound=BaseModel)
 

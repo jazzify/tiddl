@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from tiddl.core.auth.exceptions import AuthClientError
+from tiddl.core.exceptions import AuthClientError
 
 
 def test_auth_client_error_attributes():
