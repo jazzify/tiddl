@@ -1,6 +1,7 @@
 import pytest
 
-from tiddl.cli.utils.resource import ResourceTypeLiteral, TidalResource
+from tiddl.core.models import TidalResource
+from tiddl.core.types import ResourceTypeLiteral
 
 valid_test_data = [
     ("track", "12345"),

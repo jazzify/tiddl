@@ -14,7 +14,6 @@ from tiddl.cli.settings import (
 from tiddl.cli.utils.download import get_existing_track_filename
 from tiddl.cli.utils.path import resolve_existing_path_case
 from tiddl.core.api import TidalAPI
-from tiddl.core.api.models import Track, Video
 from tiddl.core.constants import (
     CHUNK_SIZE,
     QUALITIES_TRACK,
@@ -23,6 +22,7 @@ from tiddl.core.constants import (
     QUALITY_COLOR_VIDEO,
 )
 from tiddl.core.exceptions import ApiError
+from tiddl.core.models import Track, Video
 from tiddl.core.types import (
     ChoiceQualityTrack,
     ChoiceQualityVideo,

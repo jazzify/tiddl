@@ -10,7 +10,7 @@ from mutagen.flac import Picture
 from mutagen.mp4 import MP4 as MutagenMP4
 from mutagen.mp4 import MP4Cover
 
-from tiddl.core.api.models import AlbumItemsCredits, Track
+from tiddl.core.models import AlbumItemsCredits, Track
 
 log = logging.getLogger("tiddl")
 

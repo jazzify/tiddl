@@ -5,8 +5,8 @@ from m3u8 import M3U8
 from pydantic import BaseModel
 from requests import Session
 
-from tiddl.core.api.models import TrackStream, VideoStream
 from tiddl.core.constants import DOLBY_CODECS
+from tiddl.core.models import TrackStream, VideoStream
 
 
 def parse_manifest_XML(xml_content: str):

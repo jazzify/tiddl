@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from tiddl.core.api.models.resources import Video
+from tiddl.core.models import Video
 
 # Minimal valid payload shared across tests
 BASE_VIDEO = {

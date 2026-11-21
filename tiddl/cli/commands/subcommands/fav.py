@@ -3,7 +3,8 @@ from typing import Annotated, cast
 import typer
 
 from tiddl.cli.ctx import Context
-from tiddl.cli.utils.resource import ResourceTypeLiteral, TidalResource
+from tiddl.core.models import TidalResource
+from tiddl.core.types import ResourceTypeLiteral
 
 fav_subcommand = typer.Typer()
 

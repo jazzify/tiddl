@@ -1,4 +1,4 @@
-from tiddl.core.api.models.review import normalize_review_text
+from tiddl.core.models.review import normalize_review_text
 
 
 def test_normalize_review_text():

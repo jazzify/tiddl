@@ -5,8 +5,8 @@ import pytest
 from typer.testing import CliRunner
 
 from tiddl.cli.commands.auth import auth_command
-from tiddl.cli.utils.auth import AuthData
 from tiddl.core.exceptions import AuthClientError
+from tiddl.core.models import AuthData
 
 runner = CliRunner()
 

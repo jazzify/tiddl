@@ -1,7 +1,7 @@
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.core.api.models import Track
+from tiddl.core.models import Track
 
 log = getLogger(__name__)
 

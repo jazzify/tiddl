@@ -17,10 +17,9 @@ from tiddl.cli.settings import (
     ChoiceFilterVideos,
     ChoiceResourceM3U,
 )
-from tiddl.cli.utils.resource import TidalResource
-from tiddl.core.api.models import Album, AlbumItemsCredits, Track, Video
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
+from tiddl.core.models import Album, AlbumItemsCredits, TidalResource, Track, Video
 from tiddl.core.types import ChoiceQualityTrack, ChoiceQualityVideo
 from tiddl.core.utils.format import format_template
 from tiddl.core.utils.m3u import save_tracks_to_m3u

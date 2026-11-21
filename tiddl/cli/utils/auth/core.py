@@ -2,8 +2,7 @@ from logging import getLogger
 from pathlib import Path
 
 from tiddl.cli.settings import AUTH_DATA_FILE
-
-from .models import AuthData
+from tiddl.core.models import AuthData
 
 log = getLogger(__name__)
 

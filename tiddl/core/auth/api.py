@@ -1,5 +1,5 @@
 from tiddl.core.auth.client import AuthClient
-from tiddl.core.auth.models import (
+from tiddl.core.models import (
     AuthDeviceResponse,
     AuthResponse,
     AuthResponseWithRefresh,

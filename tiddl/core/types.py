@@ -27,6 +27,8 @@ type JSON = dict[str, Any]
 # Api
 type ID = str | int
 
+# Models
+ItemType = Literal["track", "video"]
 
 ### CLI
 # Resources

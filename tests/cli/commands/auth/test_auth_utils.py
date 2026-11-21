@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from tiddl.cli.utils.auth.core import load_auth_data, save_auth_data
-from tiddl.cli.utils.auth.models import AuthData
+from tiddl.core.models import AuthData
 
 
 def test_load_auth_data(tmp_path: Path):

@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from tiddl.core.api.models import Album, Playlist, Track, Video
+from tiddl.core.models import Album, Playlist, Track, Video
 from tiddl.core.utils.sanitize import sanitize_string
 
 

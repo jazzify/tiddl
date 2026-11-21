@@ -2,31 +2,29 @@ from typing import Literal
 
 from requests_cache import DO_NOT_CACHE, EXPIRE_IMMEDIATELY
 
-from tiddl.core.types import ID, StreamVideoQuality, TrackQuality
-
-from .client import TidalClient
-from .models.base import (
+from tiddl.core.models import (
+    Album,
     AlbumItems,
     AlbumItemsCredits,
+    AlbumReview,
+    Artist,
     ArtistAlbumsItems,
     ArtistVideosItems,
     Favorites,
     MixItems,
+    Playlist,
     PlaylistItems,
     Search,
     SessionResponse,
+    Track,
     TrackLyrics,
     TrackStream,
+    Video,
     VideoStream,
 )
-from .models.resources import (
-    Album,
-    Artist,
-    Playlist,
-    Track,
-    Video,
-)
-from .models.review import AlbumReview
+from tiddl.core.types import ID, StreamVideoQuality, TrackQuality
+
+from .client import TidalClient
 
 
 class Limits:

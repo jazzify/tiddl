@@ -8,7 +8,7 @@ from tiddl.core.api.api import (
     TidalAPI,
     TidalClient,
 )
-from tiddl.core.api.models import (
+from tiddl.core.models import (
     Album,
     AlbumItems,
     AlbumItemsCredits,
