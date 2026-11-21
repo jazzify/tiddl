@@ -9,6 +9,11 @@ from tiddl.core.models.api import (
     VideoStream,
 )
 from tiddl.core.models.cli import AuthData
+from tiddl.core.models.downloader import (
+    DownloadOptions,
+    DownloadResult,
+    DownloadStatus,
+)
 from tiddl.core.models.review import AlbumReview
 from tiddl.core.models.tidal.items import (
     AlbumItems,
@@ -41,6 +46,9 @@ __all__ = [
     "AuthDeviceResponse",
     "AuthResponse",
     "AuthResponseWithRefresh",
+    "DownloadOptions",
+    "DownloadResult",
+    "DownloadStatus",
     "Favorites",
     "MixItems",
     "Playlist",

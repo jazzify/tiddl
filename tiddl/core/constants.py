@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from tiddl.core.models import DownloadStatus
 from tiddl.core.types import (
     ChoiceQualityTrack,
     ChoiceQualityVideo,
@@ -27,6 +28,10 @@ QUALITY_COLOR_VIDEO: dict[StreamVideoQuality, str] = {
     "LOW": "[gray]360p",
     "MEDIUM": "[cyan]720p",
     "HIGH": "[yellow]1080p",
+}
+RESULT_MESSAGE: dict[DownloadStatus, str] = {
+    DownloadStatus.DOWNLOADED: "[green]Downloaded",
+    DownloadStatus.OVERWRITTEN: "[cyan]Overwrited",
 }
 
 ### Core
