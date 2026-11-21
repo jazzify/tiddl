@@ -14,7 +14,7 @@ def run(cmd: list[str]) -> subprocess.CompletedProcess:
         capture_output=True,
         text=True,
         encoding="utf-8",
-        check=True,
+        check=False,
         errors="replace",  # Added as a safety net
     )
     if r.returncode != 0:
