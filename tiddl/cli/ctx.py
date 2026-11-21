@@ -40,25 +40,21 @@ class ContextObject:
             raise CLIValidationException(
                 key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
                 message="Auth Token is missing. Use `tiddl auth login`",
-                extra={"auth_data": auth_data},
             )
         if not auth_data.user_id:
             raise CLIValidationException(
                 key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
                 message="User ID is missing. Use `tiddl auth login`",
-                extra={"auth_data": auth_data},
             )
         if not auth_data.country_code:
             raise CLIValidationException(
                 key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
                 message="Country Code is missing. Use `tiddl auth login`",
-                extra={"auth_data": auth_data},
             )
         if not auth_data.refresh_token:
             raise CLIValidationException(
                 key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
                 message="Refresh Token is missing. Use `tiddl auth login`",
-                extra={"auth_data": auth_data},
             )
         refresh_token = auth_data.refresh_token
 
