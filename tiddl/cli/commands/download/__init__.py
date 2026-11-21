@@ -1,5 +1,6 @@
 import asyncio
 import os
+from dataclasses import dataclass, field
 from logging import getLogger
 from pathlib import Path
 from typing import Annotated
@@ -10,14 +11,10 @@ from rich.live import Live
 from tiddl.cli.commands import subcommands
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.ctx import Context
-from tiddl.cli.settings import (
-    CONFIG,
-    ChoiceFilterArtistSingles,
-    ChoiceFilterAtmos,
-    ChoiceFilterVideos,
-    ChoiceResourceM3U,
-)
+from tiddl.cli.settings import CONFIG
 from tiddl.core.download import Downloader
+from tiddl.core.download.lrc import write_lrc_file
+from tiddl.core.download.quality import get_item_quality
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
 from tiddl.core.models import (
@@ -28,9 +25,15 @@ from tiddl.core.models import (
     Track,
     Video,
 )
-from tiddl.core.types import ChoiceQualityTrack, ChoiceQualityVideo
+from tiddl.core.types import (
+    ChoiceFilterArtistSingles,
+    ChoiceFilterAtmos,
+    ChoiceFilterVideos,
+    ChoiceQualityTrack,
+    ChoiceQualityVideo,
+)
 from tiddl.core.utils.format import format_template
-from tiddl.core.utils.m3u import save_tracks_to_m3u
+from tiddl.core.utils.m3u import save_m3u
 
 from .output import RichOutput
 
@@ -41,6 +44,17 @@ download_command.add_typer(subcommands.search_subcommand)
 
 
 log = getLogger(__name__)
+
+
+@dataclass
+class ItemMetadata:
+    date: str = ""
+    artist: str = ""
+    credits: list[AlbumItemsCredits.ItemWithCredits.CreditsEntry] = field(
+        default_factory=list
+    )
+    cover: Cover | None = None
+    album_review: str = ""
 
 
 @download_command.callback(no_args_is_help=True)
@@ -150,65 +164,6 @@ def download_callback(
 
     log.debug(f"{ctx.params=}")
 
-    def write_lrc_file(track: Track, lyrics: str, file_path: Path):
-        if not CONFIG.download.write_lrc_file or not lyrics.strip():
-            return
-
-        lrc_file_path = file_path.with_suffix(".lrc")
-
-        try:
-            with open(lrc_file_path, "w", encoding="utf-8") as f:
-                f.write(lyrics)
-        except FileExistsError as e:
-            log.error(
-                f"[DOWNLOAD_CALLBACK] Failed to write LRC file for track {track.title} (ID: {track.id}): {e}"
-            )
-
-    def save_m3u(
-        resource_type: ChoiceResourceM3U,
-        filename: str,
-        tracks_with_path: list[tuple[Path | None, Track | Video]],
-    ):
-        if not CONFIG.m3u.save:
-            return
-
-        if resource_type not in CONFIG.m3u.allowed:
-            return
-
-        tracks_with_existing_paths = [
-            (path, track)
-            for (path, track) in tracks_with_path
-            if path and isinstance(track, Track)
-        ]
-
-        log.debug(f"{resource_type=}, {filename=}, {len(tracks_with_existing_paths)=}")
-
-        save_tracks_to_m3u(
-            tracks_with_path=tracks_with_existing_paths, path=DOWNLOAD_PATH / filename
-        )
-
-    def get_item_quality(item: Track | Video):
-        def predict_item_quality() -> ChoiceQualityTrack | ChoiceQualityVideo:
-            if isinstance(item, Track):
-                if TRACK_QUALITY in ["low", "normal"]:
-                    return TRACK_QUALITY
-
-                if (
-                    TRACK_QUALITY == "max"
-                    and "HIRES_LOSSLESS" not in item.mediaMetadata.tags
-                ):
-                    return "high"
-
-                return TRACK_QUALITY
-
-            elif isinstance(item, Video):
-                # TODO add missing Video.quality literals so this function can work properly
-                return VIDEO_QUALITY
-
-            raise TypeError("Unsupported item type")
-
-        return predict_item_quality().upper()
-
     async def download_resources():
         rich_output = RichOutput(ctx.obj.console)
 
@@ -228,33 +183,17 @@ def download_callback(
             reporter=rich_output,
         )
 
-        class Metadata:
-            def __init__(
-                self,
-                date: str = "",
-                artist: str = "",
-                credits: list[AlbumItemsCredits.ItemWithCredits.CreditsEntry]
-                | None = None,
-                cover: Cover | None = None,
-                album_review: str = "",
-            ) -> None:
-                self.date = date
-                self.artist = artist
-                self.credits = credits if credits else []
-                self.cover = cover
-                self.album_review = album_review
-
         async def handle_resource(resource: TidalResource):
             async def handle_item(
                 item: Track | Video,
                 file_path: str,
-                track_metadata: Metadata | None = None,
+                track_metadata: ItemMetadata | None = None,
             ) -> tuple[Path | None, Track | Video]:
                 log.debug(f"{item.id=}, {file_path=}")
                 rich_output.total_increment()
 
                 if not track_metadata:
-                    track_metadata = Metadata()
+                    track_metadata = ItemMetadata()
 
                 result = await downloader.download(item=item, file_path=Path(file_path))
                 download_path, was_downloaded = result.path, result.downloaded
@@ -269,7 +208,6 @@ def download_callback(
                 ):
                     if isinstance(item, Track):
                         lyrics_subtitles = ""
-
                         if CONFIG.metadata.lyrics or CONFIG.download.write_lrc_file:
                             try:
                                 lyrics_subtitles = ctx.obj.api.get_track_lyrics(
@@ -277,19 +215,20 @@ def download_callback(
                                 ).subtitles
                             except ApiError as e:
                                 log.error(e)
-
+                        if CONFIG.download.write_lrc_file:
+                            write_lrc_file(
+                                track=item,
+                                lyrics=lyrics_subtitles,
+                                file_path=download_path,
+                            )
                         if (
                             not track_metadata.cover
                             and item.album.cover
                             and CONFIG.metadata.cover
                         ):
                             track_metadata.cover = Cover(item.album.cover)
-
                         if track_metadata.cover and track_metadata.cover.data is None:
                             track_metadata.cover.fetch_data()
-
-                        write_lrc_file(item, lyrics_subtitles, download_path)
-
                         add_track_metadata(
                             path=download_path,
                             track=item,
@@ -304,13 +243,10 @@ def download_callback(
                             credits_contributors=track_metadata.credits,
                             comment=track_metadata.album_review,
                         )
-
                     elif isinstance(item, Video):
                         add_video_metadata(path=download_path, video=item)
-
                 if download_path and CONFIG.download.update_mtime:
                     os.utime(download_path, None)
-
                 return download_path, item
 
             async def download_album(album: Album):
@@ -345,7 +281,11 @@ def download_callback(
                                 template=template,
                                 item=album_item.item,
                                 album=album,
-                                quality=get_item_quality(album_item.item),
+                                quality=get_item_quality(
+                                    album_item.item,
+                                    TRACK_QUALITY,
+                                    VIDEO_QUALITY,
+                                ),
                             )
 
                         except AttributeError as exc:
@@ -360,7 +300,7 @@ def download_callback(
                                 handle_item(
                                     item=album_item.item,
                                     file_path=file_path,
-                                    track_metadata=Metadata(
+                                    track_metadata=ItemMetadata(
                                         cover=cover,
                                         date=str(album.releaseDate),
                                         artist=(
@@ -395,6 +335,8 @@ def download_callback(
                 tracks_with_path = await asyncio.gather(*futures)
 
                 save_m3u(
+                    settings=CONFIG.m3u,
+                    download_path=DOWNLOAD_PATH,
                     resource_type="album",
                     filename=format_template(
                         CONFIG.m3u.templates.album,
@@ -433,9 +375,13 @@ def download_callback(
                             template=TEMPLATE or CONFIG.templates.track,
                             item=track,
                             album=album,
-                            quality=get_item_quality(track),
+                            quality=get_item_quality(
+                                track,
+                                TRACK_QUALITY,
+                                VIDEO_QUALITY,
+                            ),
                         ),
-                        track_metadata=Metadata(
+                        track_metadata=ItemMetadata(
                             cover=cover,
                             date=str(album.releaseDate),
                             artist=album.artist.name if album.artist else "",
@@ -476,7 +422,11 @@ def download_callback(
                             template=template,
                             item=video,
                             album=album,
-                            quality=get_item_quality(video),
+                            quality=get_item_quality(
+                                video,
+                                TRACK_QUALITY,
+                                VIDEO_QUALITY,
+                            ),
                         ),
                     )
 
@@ -506,7 +456,11 @@ def download_callback(
                                             item=mix_item.item,
                                             album=album,
                                             mix_id=resource.id,
-                                            quality=get_item_quality(mix_item.item),
+                                            quality=get_item_quality(
+                                                mix_item.item,
+                                                TRACK_QUALITY,
+                                                VIDEO_QUALITY,
+                                            ),
                                         ),
                                     )
                                 )
@@ -534,6 +488,8 @@ def download_callback(
                     tracks_with_path = await asyncio.gather(*futures)
 
                     save_m3u(
+                        settings=CONFIG.m3u,
+                        download_path=DOWNLOAD_PATH,
                         resource_type="mix",
                         filename=format_template(
                             CONFIG.m3u.templates.mix,
@@ -607,7 +563,11 @@ def download_callback(
                                                 template=template,
                                                 item=video,
                                                 album=album,
-                                                quality=get_item_quality(video),
+                                                quality=get_item_quality(
+                                                    video,
+                                                    TRACK_QUALITY,
+                                                    VIDEO_QUALITY,
+                                                ),
                                             ),
                                         )
                                     )
@@ -674,10 +634,12 @@ def download_callback(
                                             playlist=playlist,
                                             playlist_index=playlist_index,
                                             quality=get_item_quality(
-                                                playlist_item.item
+                                                playlist_item.item,
+                                                TRACK_QUALITY,
+                                                VIDEO_QUALITY,
                                             ),
                                         ),
-                                        track_metadata=Metadata(),
+                                        track_metadata=ItemMetadata(),
                                     )
                                 )
                             except ApiError as e:
@@ -706,6 +668,8 @@ def download_callback(
                     tracks_with_path = await asyncio.gather(*futures)
 
                     save_m3u(
+                        settings=CONFIG.m3u,
+                        download_path=DOWNLOAD_PATH,
                         resource_type="playlist",
                         filename=format_template(
                             CONFIG.m3u.templates.playlist,

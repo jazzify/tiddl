@@ -1,9 +1,36 @@
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.core.models import Track
+from tiddl.core.models import Config, Track, Video
+from tiddl.core.types import ChoiceResourceM3U
 
 log = getLogger(__name__)
+
+
+def save_m3u(
+    settings: Config.M3UConfig,
+    download_path: Path,
+    resource_type: ChoiceResourceM3U,
+    filename: str,
+    tracks_with_path: list[tuple[Path | None, Track | Video]],
+) -> None:
+    if not settings.save:
+        return
+
+    if resource_type not in settings.allowed:
+        return
+
+    tracks_with_existing_paths = [
+        (path, track)
+        for (path, track) in tracks_with_path
+        if path and isinstance(track, Track)
+    ]
+
+    log.debug(f"{resource_type=}, {filename=}, {len(tracks_with_existing_paths)=}")
+
+    save_tracks_to_m3u(
+        tracks_with_path=tracks_with_existing_paths, path=download_path / filename
+    )
 
 
 def save_tracks_to_m3u(tracks_with_path: list[tuple[Path, Track]], path: Path):

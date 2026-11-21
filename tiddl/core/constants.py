@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from tiddl.core.models import DownloadStatus
 from tiddl.core.types import (
     ChoiceQualityTrack,
     ChoiceQualityVideo,
+    DownloadStatus,
     StreamVideoQuality,
     TrackQuality,
 )

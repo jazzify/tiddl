@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Any, Literal, TypeVar
 
 from pydantic import BaseModel
@@ -29,6 +30,17 @@ type ID = str | int
 
 # Models
 ItemType = Literal["track", "video"]
+
+
+class DownloadStatus(StrEnum):
+    DOWNLOADED = "downloaded"
+    OVERWRITTEN = "overwritten"
+    EXISTS = "exists"
+    NOT_STREAMABLE = "not_streamable"
+    SKIPPED_VIDEO_FILTER = "skipped_video_filter"
+    SKIPPED_ATMOS_FILTER = "skipped_atmos_filter"
+    FAILED = "failed"
+
 
 ### CLI
 # Resources

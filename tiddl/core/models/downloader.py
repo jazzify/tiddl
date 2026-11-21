@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from enum import StrEnum
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -10,6 +9,7 @@ from tiddl.core.types import (
     ChoiceFilterVideos,
     ChoiceQualityTrack,
     ChoiceQualityVideo,
+    DownloadStatus,
 )
 
 
@@ -23,16 +23,6 @@ class DownloadOptions(BaseModel, frozen=True):
     scan_path: Path
     match_existing_path_case: bool = False
     atmos_filter: ChoiceFilterAtmos = "none"
-
-
-class DownloadStatus(StrEnum):
-    DOWNLOADED = "downloaded"
-    OVERWRITTEN = "overwritten"
-    EXISTS = "exists"
-    NOT_STREAMABLE = "not_streamable"
-    SKIPPED_VIDEO_FILTER = "skipped_video_filter"
-    SKIPPED_ATMOS_FILTER = "skipped_atmos_filter"
-    FAILED = "failed"
 
 
 @dataclass(frozen=True)

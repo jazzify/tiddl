@@ -12,9 +12,9 @@ from tiddl.core.models.cli import AuthData
 from tiddl.core.models.downloader import (
     DownloadOptions,
     DownloadResult,
-    DownloadStatus,
 )
 from tiddl.core.models.review import AlbumReview
+from tiddl.core.models.settings import Config
 from tiddl.core.models.tidal.items import (
     AlbumItems,
     AlbumItemsCredits,
@@ -46,9 +46,9 @@ __all__ = [
     "AuthDeviceResponse",
     "AuthResponse",
     "AuthResponseWithRefresh",
+    "Config",
     "DownloadOptions",
     "DownloadResult",
-    "DownloadStatus",
     "Favorites",
     "MixItems",
     "Playlist",

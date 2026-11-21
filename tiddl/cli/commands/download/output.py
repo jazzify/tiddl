@@ -25,12 +25,12 @@ from tiddl.core.download.reporter import Handle
 from tiddl.core.exceptions import CLIValidationException
 from tiddl.core.models import (
     DownloadResult,
-    DownloadStatus,
     Track,
     TrackStream,
     Video,
     VideoStream,
 )
+from tiddl.core.types import DownloadStatus
 
 
 def vibrant_color(item: Track | Video) -> str:

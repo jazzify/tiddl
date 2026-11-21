@@ -9,13 +9,12 @@ from tiddl.core.exceptions import ApiError, FFmpegError
 from tiddl.core.models import (
     DownloadOptions,
     DownloadResult,
-    DownloadStatus,
     Track,
     TrackStream,
     Video,
     VideoStream,
 )
-from tiddl.core.types import StreamVideoQuality, TrackQuality
+from tiddl.core.types import DownloadStatus, StreamVideoQuality, TrackQuality
 from tiddl.core.utils import parse_track_stream, parse_video_stream
 from tiddl.core.utils.ffmpeg import convert_to_mp4, extract_flac
 
