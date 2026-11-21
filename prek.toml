@@ -57,3 +57,4 @@ id = "bandit"
 name = "bandit checks"
 language = "system"
 entry = "uv run bandit"
+exclude = '^tests/'

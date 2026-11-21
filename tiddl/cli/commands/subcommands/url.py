@@ -4,7 +4,6 @@ from typing_extensions import Annotated
 from tiddl.cli.ctx import Context
 from tiddl.cli.utils.resource import TidalResource
 
-
 url_subcommand = typer.Typer()
 
 

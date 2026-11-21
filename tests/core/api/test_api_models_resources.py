@@ -3,7 +3,6 @@ from pydantic import ValidationError
 
 from tiddl.core.api.models.resources import Video
 
-
 # Minimal valid payload shared across tests
 BASE_VIDEO = {
     "id": 123,

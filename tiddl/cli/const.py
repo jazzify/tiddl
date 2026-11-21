@@ -1,7 +1,6 @@
 from os import environ
 from pathlib import Path
 
-
 ENV_KEY = "TIDDL_PATH"
 APP_DIR_NAME = ".tiddl"
 

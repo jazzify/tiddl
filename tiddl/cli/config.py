@@ -1,8 +1,9 @@
 from logging import getLogger
 from pathlib import Path
-from pydantic import BaseModel, field_validator
 from tomllib import loads as parse_toml
 from typing import Literal
+
+from pydantic import BaseModel, field_validator
 
 from tiddl.cli.const import APP_PATH
 from tiddl.core.utils.const import TRACK_QUALITY_LITERAL, VIDEO_QUALITY_LITERAL
@@ -62,7 +63,10 @@ class Config(BaseModel):
 
         def model_post_init(self, __context):
             # set scan path to download path when download path is non default
-            if self.scan_path == DEFAULT_DOWNLOAD_PATH and self.download_path != DEFAULT_DOWNLOAD_PATH:
+            if (
+                self.scan_path == DEFAULT_DOWNLOAD_PATH
+                and self.download_path != DEFAULT_DOWNLOAD_PATH
+            ):
                 self.scan_path = self.download_path
 
         @field_validator("download_path", "scan_path", mode="before")
@@ -95,8 +99,6 @@ class Config(BaseModel):
         mix: str = ""
 
         def model_post_init(self, __context):
-            assert self.default != "", "Default template cannot be empty."
-
             # override templates to default
             for field in ["track", "video", "album", "playlist", "mix"]:
                 if getattr(self, field) == "":

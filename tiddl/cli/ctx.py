@@ -1,14 +1,15 @@
-import typer
-from time import time
 from pathlib import Path
+from time import time
 
+import typer
 from rich.console import Console
 
-from tiddl.core.api import TidalClient, TidalAPI
 from tiddl.cli.config import APP_PATH
-from tiddl.core.auth import AuthAPI
 from tiddl.cli.utils.auth.core import load_auth_data, save_auth_data
 from tiddl.cli.utils.resource import TidalResource
+from tiddl.common.cli.exceptions import CLIValidationException
+from tiddl.core.api import TidalAPI, TidalClient
+from tiddl.core.auth import AuthAPI
 
 
 class ContextObject:
@@ -35,13 +36,31 @@ class ContextObject:
             return self._api
 
         auth_data = load_auth_data()
-
-        assert auth_data.token, "Auth Token is missing. Use `tiddl auth login`"
-        assert auth_data.user_id, "User ID is missing. Use `tiddl auth login`"
-        assert auth_data.country_code, "Country Code is missing. Use `tiddl auth login`"
-
+        if not auth_data.token:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
+                message="Auth Token is missing. Use `tiddl auth login`",
+                extra={"auth_data": auth_data},
+            )
+        if not auth_data.user_id:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
+                message="User ID is missing. Use `tiddl auth login`",
+                extra={"auth_data": auth_data},
+            )
+        if not auth_data.country_code:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
+                message="Country Code is missing. Use `tiddl auth login`",
+                extra={"auth_data": auth_data},
+            )
+        if not auth_data.refresh_token:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_AUTH_DATA_EXCEPTION",
+                message="Refresh Token is missing. Use `tiddl auth login`",
+                extra={"auth_data": auth_data},
+            )
         refresh_token = auth_data.refresh_token
-        assert refresh_token, "Refresh Token is missing. Use `tiddl auth login`"
 
         def on_token_expiry() -> str | None:
             auth_response = self.auth_api.refresh_token(refresh_token)

@@ -1,16 +1,16 @@
 import logging
 import unicodedata
-
 from dataclasses import dataclass, field
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
-from mutagen.flac import FLAC as MutagenFLAC, Picture
 from mutagen.easymp4 import EasyMP4 as MutagenEasyMP4
-from mutagen.mp4 import MP4 as MutagenMP4, MP4Cover
+from mutagen.flac import FLAC as MutagenFLAC
+from mutagen.flac import Picture
+from mutagen.mp4 import MP4 as MutagenMP4
+from mutagen.mp4 import MP4Cover
 
 from tiddl.core.api.models import AlbumItemsCredits, Track
-
 
 log = logging.getLogger("tiddl")
 

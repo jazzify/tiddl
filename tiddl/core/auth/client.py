@@ -1,8 +1,9 @@
 import base64
 import logging
 from os import environ
-from requests import request
 from typing import Any, TypeAlias
+
+from requests import request
 
 from tiddl.core.auth.exceptions import AuthClientError
 
@@ -37,7 +38,6 @@ JSON: TypeAlias = dict[str, Any]
 
 
 class AuthClient:
-
     def __init__(self) -> None:
         self.auth_url = AUTH_URL
         self.client_id = CLIENT_ID

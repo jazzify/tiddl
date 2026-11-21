@@ -1,12 +1,12 @@
-import typer
 from datetime import datetime
-from time import time, sleep
+from time import sleep, time
+
+import typer
 from rich.console import Console
-
-from tiddl.cli.utils.auth.core import load_auth_data, save_auth_data, AuthData
-from tiddl.core.auth import AuthAPI, AuthClientError
-
 from typing_extensions import Annotated
+
+from tiddl.cli.utils.auth.core import AuthData, load_auth_data, save_auth_data
+from tiddl.core.auth import AuthAPI, AuthClientError
 
 console = Console()
 
@@ -20,9 +20,7 @@ auth_command = typer.Typer(
 def login(
     NO_BROWSER: Annotated[
         bool,
-        typer.Option(
-            "--no-browser", "-n", help="Do not open browser."
-        ),
+        typer.Option("--no-browser", "-n", help="Do not open browser."),
     ] = False,
 ):
     loaded_auth_data = load_auth_data()

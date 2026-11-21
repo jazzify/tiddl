@@ -1,19 +1,21 @@
 from pathlib import Path
 
 from rich.console import Console, Group
+from rich.panel import Panel
 from rich.progress import (
-    Progress,
-    TransferSpeedColumn,
-    SpinnerColumn,
+    BarColumn,
     FileSizeColumn,
     MofNCompleteColumn,
+    Progress,
     ProgressColumn,
-    BarColumn,
+    SpinnerColumn,
     Task,
     TaskID,
+    TransferSpeedColumn,
 )
 from rich.text import Text
-from rich.panel import Panel
+
+from tiddl.common.cli.exceptions import CLIValidationException
 
 
 class TimeElapsedColumn(ProgressColumn):
@@ -67,8 +69,10 @@ class RichOutput:
     def total_increment(self, count: float = 1):
         task = self.total_progress._tasks.get(self.total_task)
 
-        assert task is not None
-        assert task.total is not None
+        if not task or task.total is None:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_TOTAL_INCREMENT_EXCEPTION", extra={"task": task}
+            )
 
         self.total_progress.update(self.total_task, total=task.total + count)
 
@@ -81,7 +85,10 @@ class RichOutput:
     def download_finish(self, task_id: TaskID) -> Task:
         task = self.download_progress._tasks.get(task_id)
 
-        assert task is not None
+        if not task:
+            raise CLIValidationException(
+                key="CLI_VALIDATION_DOWNLOAD_FINISH_EXCEPTION", extra={"task": task}
+            )
 
         self.download_progress.remove_task(task_id=task_id)
         self.total_progress.advance(self.total_task, advance=1)

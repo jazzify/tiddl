@@ -2,9 +2,12 @@ from datetime import datetime
 
 import pytest
 
-from tiddl.core.utils.format import AlbumTemplate, format_template, generate_template_data
 from tiddl.core.api.models.resources import Video
-
+from tiddl.core.utils.format import (
+    AlbumTemplate,
+    format_template,
+    generate_template_data,
+)
 
 # Minimal Video instance used across format tests
 BASE_VIDEO = Video.model_validate(
@@ -99,5 +102,6 @@ class TestGenerateTemplateDataAlbumFallback:
     def test_album_template_has_empty_fields_when_no_album(self):
         data = generate_template_data(item=BASE_VIDEO, album=None)
         album = data["album"]
+        assert isinstance(album, AlbumTemplate)
         assert album.title == ""
         assert album.artist == ""

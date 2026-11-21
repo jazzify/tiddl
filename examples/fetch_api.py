@@ -1,9 +1,9 @@
-from tiddl.core.api import TidalAPI, TidalClient
+from tiddl.cli.const import APP_PATH
 
 # we will utilize some functions from tiddl cli
 # and use `APP_PATH` that is located at our /home_directory/.tiddl
 from tiddl.cli.utils.auth import load_auth_data
-from tiddl.cli.const import APP_PATH
+from tiddl.core.api import TidalAPI, TidalClient
 
 # !! remember to be logged in, use `tiddl auth login`
 # it will save auth token in /home_directory/.tiddl/auth.json
@@ -15,9 +15,9 @@ auth_data = load_auth_data()
 
 # we make sure auth_data is not empty = we are logged in
 
-assert auth_data.token
-assert auth_data.country_code
-assert auth_data.user_id
+assert auth_data.token  # nosec B101
+assert auth_data.country_code  # nosec B101
+assert auth_data.user_id  # nosec B101
 
 # we create Client for our API.
 # this is custom client that can cache requests

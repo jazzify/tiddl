@@ -1,5 +1,7 @@
-import pytest
 from typing import Any
+
+import pytest
+
 from tiddl.core.auth.exceptions import AuthClientError
 
 

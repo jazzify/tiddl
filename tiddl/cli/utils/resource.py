@@ -1,8 +1,7 @@
-from pydantic import BaseModel
+from typing import Literal, get_args
 from urllib.parse import urlparse
 
-from typing import Literal, get_args
-
+from pydantic import BaseModel
 
 ResourceTypeLiteral = Literal["track", "video", "album", "playlist", "artist", "mix"]
 

@@ -2,29 +2,28 @@ import pytest
 from pytest_mock import MockerFixture, MockType
 
 from tiddl.core.api.api import (
-    TidalAPI,
-    TidalClient,
-    Limits,
     DO_NOT_CACHE,
     EXPIRE_IMMEDIATELY,
+    Limits,
+    TidalAPI,
+    TidalClient,
 )
-
 from tiddl.core.api.models import (
     Album,
-    Artist,
-    Playlist,
-    Track,
-    Video,
     AlbumItems,
     AlbumItemsCredits,
+    Artist,
     ArtistAlbumsItems,
     Favorites,
-    TrackLyrics,
-    PlaylistItems,
     MixItems,
+    Playlist,
+    PlaylistItems,
     Search,
     SessionResponse,
+    Track,
+    TrackLyrics,
     TrackStream,
+    Video,
     VideoStream,
 )
 

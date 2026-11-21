@@ -1,9 +1,9 @@
-from pathlib import Path
 from logging import getLogger
+from pathlib import Path
 
 from tiddl.cli.config import APP_PATH
-from .models import AuthData
 
+from .models import AuthData
 
 AUTH_DATA_FILE = APP_PATH / "auth.json"
 

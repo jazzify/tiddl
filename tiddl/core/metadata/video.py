@@ -1,5 +1,7 @@
 from pathlib import Path
+
 from mutagen.easymp4 import EasyMP4 as MutagenEasyMP4
+
 from tiddl.core.api.models import Video
 
 

@@ -1,5 +1,6 @@
 import pytest
 from pytest_mock import MockerFixture
+
 from tiddl.core.auth.client import AuthClient
 from tiddl.core.auth.exceptions import AuthClientError
 

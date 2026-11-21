@@ -1,8 +1,9 @@
-from m3u8 import M3U8
-from requests import Session
-from pydantic import BaseModel
 from base64 import b64decode
-from xml.etree.ElementTree import fromstring
+
+from defusedxml.ElementTree import parse
+from m3u8 import M3U8
+from pydantic import BaseModel
+from requests import Session
 
 from tiddl.core.api.models import TrackStream, VideoStream
 
@@ -16,7 +17,7 @@ def parse_manifest_XML(xml_content: str):
 
     NS = "{urn:mpeg:dash:schema:mpd:2011}"
 
-    tree = fromstring(xml_content)
+    tree = parse(xml_content)
 
     representationElement = tree.find(
         f"{NS}Period/{NS}AdaptationSet/{NS}Representation"

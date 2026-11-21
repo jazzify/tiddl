@@ -1,7 +1,7 @@
-import requests
-
-from pathlib import Path
 from logging import getLogger
+from pathlib import Path
+
+import requests
 
 log = getLogger(__name__)
 
@@ -27,7 +27,7 @@ class Cover:
         self.data = None
 
     def fetch_data(self) -> bytes:
-        req = requests.get(self.url)
+        req = requests.get(self.url, timeout=3)
 
         if req.status_code != 200:
             log.error(f"could not download cover. ({req.status_code}) {self.url}")

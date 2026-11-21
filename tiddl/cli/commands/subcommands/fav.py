@@ -1,10 +1,10 @@
-import typer
 from typing import cast
+
+import typer
 from typing_extensions import Annotated
 
 from tiddl.cli.ctx import Context
 from tiddl.cli.utils.resource import ResourceTypeLiteral, TidalResource
-
 
 fav_subcommand = typer.Typer()
 

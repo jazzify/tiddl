@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 import aiofiles
 import aiohttp
 
-from tiddl.cli.config import VIDEOS_FILTER_LITERAL, ATMOS_FILTER_LITERAL
+from tiddl.cli.config import ATMOS_FILTER_LITERAL, VIDEOS_FILTER_LITERAL
 from tiddl.cli.utils.download import get_existing_track_filename
 from tiddl.cli.utils.path import resolve_existing_path_case
 from tiddl.core.api import ApiError, TidalAPI

@@ -1,16 +1,17 @@
 import json
+from collections.abc import Callable
 from logging import getLogger
 from pathlib import Path
-from typing import Any, Type, TypeVar, Callable, Optional
+from time import sleep
+from typing import Any, Optional, TypeVar
 
 from pydantic import BaseModel
-from time import sleep
-
 from requests.exceptions import JSONDecodeError
+from requests.structures import CaseInsensitiveDict
 from requests_cache import (
+    NEVER_EXPIRE,
     CachedSession,
     StrOrPath,
-    NEVER_EXPIRE,
 )
 
 from .exceptions import ApiError
@@ -45,10 +46,10 @@ class TidalClient:
         self.session = CachedSession(
             cache_name=cache_name, always_revalidate=omit_cache
         )
-        self.session.headers = {
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/json",
-        }
+        cid = CaseInsensitiveDict()
+        cid["Authorization"] = f"Bearer {token}"
+        cid["Accept"] = "application/json"
+        self.session.headers = cid
         self._token = token
 
     @property
@@ -66,7 +67,7 @@ class TidalClient:
 
     def fetch(
         self,
-        model: Type[T],
+        model: type[T],
         endpoint: str,
         params: dict[str, Any] = {},
         expire_after: int = NEVER_EXPIRE,
