@@ -15,7 +15,43 @@ from rich.progress import (
 )
 from rich.text import Text
 
+from tiddl.core.constants import (
+    QUALITY_COLOR_TRACK,
+    QUALITY_COLOR_VIDEO,
+    RESULT_MESSAGE,
+)
+from tiddl.core.download import Reporter
+from tiddl.core.download.reporter import Handle
 from tiddl.core.exceptions import CLIValidationException
+from tiddl.core.models import (
+    DownloadResult,
+    DownloadStatus,
+    Track,
+    TrackStream,
+    Video,
+    VideoStream,
+)
+
+
+def vibrant_color(item: Track | Video) -> str:
+    color = item.album.vibrantColor if isinstance(item, Track) else item.vibrantColor
+    return color or "gray"
+
+
+def quality_label(stream: TrackStream | VideoStream) -> str:
+    if isinstance(stream, VideoStream):
+        return QUALITY_COLOR_VIDEO[stream.videoQuality]
+    label = QUALITY_COLOR_TRACK[stream.audioQuality]
+    if (
+        stream.audioQuality in ["HI_RES_LOSSLESS", "LOSSLESS"]
+        and stream.audioMode == "STEREO"
+    ):
+        return (
+            f"{label} {stream.bitDepth}-bit, {(stream.sampleRate or 0) / 1000:.1f} kHz"
+        )
+    if stream.audioMode == "DOLBY_ATMOS":
+        return "[blue]Dolby Atmos[/]"
+    return label
 
 
 class TimeElapsedColumn(ProgressColumn):
@@ -29,7 +65,7 @@ class TimeElapsedColumn(ProgressColumn):
         return Text(f"{elapsed:.2f}s", style="progress.elapsed")
 
 
-class RichOutput:
+class RichOutput(Reporter):
     def __init__(self, console: Console, download_height: int | None = None) -> None:
         self.console = console
 
@@ -108,3 +144,46 @@ class RichOutput:
             description = item_description
 
         self.console.print(f"{result_message} {description}")
+
+    def on_start(
+        self, item: Track | Video, stream: TrackStream | VideoStream
+    ) -> Handle:
+        return self.download_start(
+            f"[{vibrant_color(item)}]{item.title} {quality_label(stream)}"
+        )
+
+    def on_progress(self, handle: Handle, size: int) -> None:
+        self.download_advance(handle, size=size)
+
+    def on_done(self, handle: Handle, result: DownloadResult) -> None:
+        task = self.download_finish(task_id=handle)
+        self.show_item_result(
+            result_message=RESULT_MESSAGE[result.status],
+            item_description=task.description,
+            item_path=result.path,
+        )
+
+    def on_skip(self, result: DownloadResult) -> None:
+        item = result.item
+
+        match result.status:
+            case DownloadStatus.EXISTS:
+                self.show_item_result(
+                    result_message="[yellow]Exists",
+                    item_description=f"[{vibrant_color(item)}]{item.title}",
+                    item_path=result.path,
+                )
+            case DownloadStatus.NOT_STREAMABLE:
+                self.console.print(f"[red]Can't stream[/] {item.title} ({item.id})")
+            case DownloadStatus.SKIPPED_VIDEO_FILTER:
+                self.console.print(
+                    f"Skipping '{item.title}' due to video filter set to '{result.reason}'"
+                )
+            case DownloadStatus.SKIPPED_ATMOS_FILTER:
+                self.console.print(
+                    f"[blue]Skipping[/] [gray]{item.title}[/] [blue]due to Dolby Atmos filter[/] {result.reason}"
+                )
+            case DownloadStatus.FAILED:
+                self.console.print(
+                    f"[red]Error [{vibrant_color(item)}]{item.title}[/] - {result.reason}"
+                )

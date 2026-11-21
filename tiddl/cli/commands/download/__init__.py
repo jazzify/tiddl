@@ -17,14 +17,21 @@ from tiddl.cli.settings import (
     ChoiceFilterVideos,
     ChoiceResourceM3U,
 )
+from tiddl.core.download import Downloader
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import Cover, add_track_metadata, add_video_metadata
-from tiddl.core.models import Album, AlbumItemsCredits, TidalResource, Track, Video
+from tiddl.core.models import (
+    Album,
+    AlbumItemsCredits,
+    DownloadOptions,
+    TidalResource,
+    Track,
+    Video,
+)
 from tiddl.core.types import ChoiceQualityTrack, ChoiceQualityVideo
 from tiddl.core.utils.format import format_template
 from tiddl.core.utils.m3u import save_tracks_to_m3u
 
-from .downloader import Downloader
 from .output import RichOutput
 
 download_command = typer.Typer(name="download")
@@ -206,17 +213,19 @@ def download_callback(
         rich_output = RichOutput(ctx.obj.console)
 
         downloader = Downloader(
-            tidal_api=ctx.obj.api,
-            threads_count=THREADS_COUNT,
-            rich_output=rich_output,
-            track_quality=TRACK_QUALITY,
-            video_quality=VIDEO_QUALITY,
-            videos_filter=VIDEOS_FILTER,
-            skip_existing=not SKIP_EXISTING,
-            download_path=DOWNLOAD_PATH,
-            scan_path=SCAN_PATH,
-            match_existing_path_case=CONFIG.download.match_existing_path_case,
-            dolby_atmos_filter=DOLBY_ATMOS_FILTER,
+            api=ctx.obj.api,
+            options=DownloadOptions(
+                threads_count=THREADS_COUNT,
+                track_quality=TRACK_QUALITY,
+                video_quality=VIDEO_QUALITY,
+                videos_filter=VIDEOS_FILTER,
+                skip_existing=not SKIP_EXISTING,
+                download_path=DOWNLOAD_PATH,
+                scan_path=SCAN_PATH,
+                match_existing_path_case=CONFIG.download.match_existing_path_case,
+                atmos_filter=DOLBY_ATMOS_FILTER,
+            ),
+            reporter=rich_output,
         )
 
         class Metadata:
@@ -247,9 +256,8 @@ def download_callback(
                 if not track_metadata:
                     track_metadata = Metadata()
 
-                download_path, was_downloaded = await downloader.download(
-                    item=item, file_path=Path(file_path)
-                )
+                result = await downloader.download(item=item, file_path=Path(file_path))
+                download_path, was_downloaded = result.path, result.downloaded
 
                 log.debug(f"{download_path=}, {was_downloaded=}")
 

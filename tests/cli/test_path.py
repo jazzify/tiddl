@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from tiddl.cli.utils.path import resolve_existing_path_case
+from tiddl.core.download.paths import resolve_existing_path_case
 
 
 def test_resolve_existing_path_case_reuses_existing_directories(tmp_path: Path):
