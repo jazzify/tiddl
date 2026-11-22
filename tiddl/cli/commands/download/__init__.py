@@ -1,5 +1,4 @@
 import asyncio
-import os
 from logging import getLogger
 from pathlib import Path
 from typing import Annotated
@@ -11,22 +10,18 @@ from tiddl.cli.commands import subcommands
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.ctx import Context
 from tiddl.cli.settings import CONFIG
-from tiddl.core.download import Downloader
-from tiddl.core.download.lrc import write_lrc_file
+from tiddl.core.download import Downloader, ItemPipeline
 from tiddl.core.download.quality import get_item_quality
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import (
     Cover,
     ItemMetadata,
-    add_track_metadata,
-    add_video_metadata,
 )
 from tiddl.core.models import (
     Album,
     DownloadOptions,
+    ItemPipelineOptions,
     TidalResource,
-    Track,
-    Video,
 )
 from tiddl.core.types import (
     ChoiceFilterArtistSingles,
@@ -175,72 +170,22 @@ def download_callback(
             reporter=rich_output,
         )
 
+        pipeline = ItemPipeline(
+            api=ctx.obj.api,
+            downloader=downloader,
+            reporter=rich_output,
+            options=ItemPipelineOptions(
+                metadata_enable=CONFIG.metadata.enable,
+                metadata_lyrics=CONFIG.metadata.lyrics,
+                metadata_cover=CONFIG.metadata.cover,
+                write_lrc_file=CONFIG.download.write_lrc_file,
+                update_mtime=CONFIG.download.update_mtime,
+                rewrite_metadata=REWRITE_METADATA,
+            ),
+        )
+        handle_item = pipeline.run
+
         async def handle_resource(resource: TidalResource):
-            async def handle_item(
-                item: Track | Video,
-                file_path: str,
-                track_metadata: ItemMetadata | None = None,
-            ) -> tuple[Path | None, Track | Video]:
-                log.debug(f"{item.id=}, {file_path=}")
-                rich_output.total_increment()
-
-                if not track_metadata:
-                    track_metadata = ItemMetadata()
-
-                result = await downloader.download(item=item, file_path=Path(file_path))
-                download_path, was_downloaded = result.path, result.downloaded
-
-                log.debug(f"{download_path=}, {was_downloaded=}")
-
-                if (
-                    CONFIG.metadata.enable
-                    and download_path
-                    # rewrite metadata when track was skipped due to already existing
-                    and (REWRITE_METADATA or was_downloaded)
-                ):
-                    if isinstance(item, Track):
-                        lyrics_subtitles = ""
-                        if CONFIG.metadata.lyrics or CONFIG.download.write_lrc_file:
-                            try:
-                                lyrics_subtitles = ctx.obj.api.get_track_lyrics(
-                                    item.id
-                                ).subtitles
-                            except ApiError as e:
-                                log.error(e)
-                        if CONFIG.download.write_lrc_file:
-                            write_lrc_file(
-                                track=item,
-                                lyrics=lyrics_subtitles,
-                                file_path=download_path,
-                            )
-                        if (
-                            not track_metadata.cover
-                            and item.album.cover
-                            and CONFIG.metadata.cover
-                        ):
-                            track_metadata.cover = Cover(item.album.cover)
-                        if track_metadata.cover and track_metadata.cover.data is None:
-                            track_metadata.cover.fetch_data()
-                        add_track_metadata(
-                            path=download_path,
-                            track=item,
-                            lyrics=lyrics_subtitles,
-                            album_artist=track_metadata.artist,
-                            cover_data=(
-                                track_metadata.cover.data
-                                if track_metadata.cover
-                                else None
-                            ),
-                            date=track_metadata.date,
-                            credits_contributors=track_metadata.credits,
-                            comment=track_metadata.album_review,
-                        )
-                    elif isinstance(item, Video):
-                        add_video_metadata(path=download_path, video=item)
-                if download_path and CONFIG.download.update_mtime:
-                    os.utime(download_path, None)
-                return download_path, item
-
             async def download_album(album: Album):
                 offset = 0
                 futures = []

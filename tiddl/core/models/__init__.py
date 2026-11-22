@@ -12,6 +12,7 @@ from tiddl.core.models.cli import AuthData
 from tiddl.core.models.downloader import (
     DownloadOptions,
     DownloadResult,
+    ItemPipelineOptions,
 )
 from tiddl.core.models.review import AlbumReview
 from tiddl.core.models.settings import Config
@@ -50,6 +51,7 @@ __all__ = [
     "DownloadOptions",
     "DownloadResult",
     "Favorites",
+    "ItemPipelineOptions",
     "MixItems",
     "Playlist",
     "PlaylistItems",

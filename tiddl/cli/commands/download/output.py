@@ -145,6 +145,9 @@ class RichOutput(Reporter):
 
         self.console.print(f"{result_message} {description}")
 
+    def on_queued(self) -> None:
+        self.total_increment()
+
     def on_start(
         self, item: Track | Video, stream: TrackStream | VideoStream
     ) -> Handle:

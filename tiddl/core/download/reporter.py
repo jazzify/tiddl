@@ -12,6 +12,10 @@ class Reporter(Protocol):
     The downloader never prints; the CLI implements this with Rich.
     """
 
+    def on_queued(self) -> None:
+        """An item entered the pipeline (used for the overall total)."""
+        ...
+
     def on_start(
         self, item: Track | Video, stream: TrackStream | VideoStream
     ) -> Handle: ...
@@ -28,6 +32,9 @@ class Reporter(Protocol):
 
 
 class NullReporter:
+    def on_queued(self) -> None:
+        pass
+
     def on_start(
         self, item: Track | Video, stream: TrackStream | VideoStream
     ) -> Handle:

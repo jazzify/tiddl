@@ -25,6 +25,16 @@ class DownloadOptions(BaseModel, frozen=True):
     atmos_filter: ChoiceFilterAtmos = "none"
 
 
+class ItemPipelineOptions(BaseModel, frozen=True):
+    metadata_enable: bool
+    metadata_lyrics: bool
+    metadata_cover: bool
+    write_lrc_file: bool
+    update_mtime: bool
+    # tag files that were skipped because they already exist
+    rewrite_metadata: bool
+
+
 @dataclass(frozen=True)
 class DownloadResult:
     status: DownloadStatus
