@@ -11,6 +11,7 @@ from tiddl.cli.commands.auth import refresh
 from tiddl.cli.ctx import Context
 from tiddl.cli.settings import CONFIG
 from tiddl.core.download import Downloader, ItemPipeline
+from tiddl.core.download.pagination import paginate
 from tiddl.core.download.quality import get_item_quality
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import (
@@ -187,7 +188,6 @@ def download_callback(
 
         async def handle_resource(resource: TidalResource):
             async def download_album(album: Album):
-                offset = 0
                 futures = []
 
                 cover: Cover | None = None
@@ -206,11 +206,11 @@ def download_callback(
                     except ApiError as e:
                         log.error(e)
 
-                while True:
-                    album_items = ctx.obj.api.get_album_items_credits(
+                for album_items in paginate(
+                    lambda offset: ctx.obj.api.get_album_items_credits(
                         album_id=album.id, offset=offset
                     )
-
+                ):
                     for album_item in album_items.items:
                         try:
                             template = TEMPLATE or CONFIG.templates.album
@@ -264,10 +264,6 @@ def download_callback(
                             ctx.obj.console.print(f"[red]Error:[/] {e} ({track_info})")
                             if RAISE_ERRORS:
                                 raise
-
-                    offset += album_items.limit
-                    if offset >= album_items.totalNumberOfItems:
-                        break
 
                 tracks_with_path = await asyncio.gather(*futures)
 
@@ -368,12 +364,13 @@ def download_callback(
                     )
 
                 case "mix":
-                    offset = 0
                     futures = []
 
-                    while True:
-                        mix_items = ctx.obj.api.get_mix_items(resource.id, offset=0)
-
+                    for mix_items in paginate(
+                        lambda offset: ctx.obj.api.get_mix_items(
+                            resource.id, offset=offset
+                        )
+                    ):
                         for mix_item in mix_items.items:
                             template = TEMPLATE or CONFIG.templates.mix
 
@@ -418,10 +415,6 @@ def download_callback(
                                 if RAISE_ERRORS:
                                     raise
 
-                        offset += mix_items.limit
-                        if offset >= mix_items.totalNumberOfItems:
-                            break
-
                     tracks_with_path = await asyncio.gather(*futures)
 
                     save_m3u(
@@ -460,30 +453,22 @@ def download_callback(
                                 raise
 
                     def get_all_albums(singles: bool):
-                        offset = 0
-
-                        while True:
-                            artist_albums = ctx.obj.api.get_artist_albums(
+                        for artist_albums in paginate(
+                            lambda offset: ctx.obj.api.get_artist_albums(
                                 artist_id=resource.id,
                                 offset=offset,
                                 filter="EPSANDSINGLES" if singles else "ALBUMS",
                             )
-
+                        ):
                             for album in artist_albums.items:
                                 futures.append(safe_download_album(album))
 
-                            offset += artist_albums.limit
-                            if offset >= artist_albums.totalNumberOfItems:
-                                break
-
                     def get_all_videos():
-                        offset = 0
-
-                        while True:
-                            artist_videos = ctx.obj.api.get_artist_videos(
+                        for artist_videos in paginate(
+                            lambda offset: ctx.obj.api.get_artist_videos(
                                 resource.id, offset=offset
                             )
-
+                        ):
                             for video in artist_videos.items:
                                 template = TEMPLATE or CONFIG.templates.video
 
@@ -521,11 +506,6 @@ def download_callback(
                                     if RAISE_ERRORS:
                                         raise
 
-                            if offset > artist_videos.totalNumberOfItems:
-                                break
-
-                            offset += artist_videos.limit
-
                     if VIDEOS_FILTER != "none":
                         get_all_videos()
 
@@ -539,16 +519,15 @@ def download_callback(
                     await asyncio.gather(*futures)
 
                 case "playlist":
-                    offset = 0
                     futures = []
                     playlist_index = 0
                     playlist = ctx.obj.api.get_playlist(playlist_uuid=resource.id)
 
-                    while True:
-                        playlist_items = ctx.obj.api.get_playlist_items(
+                    for playlist_items in paginate(
+                        lambda offset: ctx.obj.api.get_playlist_items(
                             playlist_uuid=resource.id, offset=offset
                         )
-
+                    ):
                         for playlist_item in playlist_items.items:
                             playlist_index += 1
                             template = TEMPLATE or CONFIG.templates.playlist
@@ -597,10 +576,6 @@ def download_callback(
                                 )
                                 if RAISE_ERRORS:
                                     raise
-
-                        offset += playlist_items.limit
-                        if offset >= playlist_items.totalNumberOfItems:
-                            break
 
                     tracks_with_path = await asyncio.gather(*futures)
 
