@@ -201,7 +201,7 @@ def download_callback(
                 if CONFIG.metadata.album_review:
                     try:
                         album_review = ctx.obj.api.get_album_review(
-                            album_id=resource.id
+                            album_id=album.id
                         ).normalized_text()
                     except ApiError as e:
                         log.error(e)
