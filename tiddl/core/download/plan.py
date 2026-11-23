@@ -1,11 +1,10 @@
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from enum import StrEnum
 from pathlib import Path
 
 from tiddl.core.metadata import Cover, ItemMetadata
 from tiddl.core.models import Track, Video
-from tiddl.core.types import ChoiceResourceM3U
+from tiddl.core.types import ChoiceResourceM3U, PlanErrorKind
 
 
 @dataclass
@@ -39,13 +38,6 @@ class ResourcePlan:
     # when set, a failure of this plan is reported under this label
     # and must not abort sibling plans (e.g. albums of an artist)
     label: str | None = None
-
-
-class PlanErrorKind(StrEnum):
-    # a file template could not be formatted, the item is skipped
-    TEMPLATE = "template"
-    # anything else that went wrong while planning one item or album
-    ITEM = "item"
 
 
 @dataclass(frozen=True)

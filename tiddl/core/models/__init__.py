@@ -1,21 +1,10 @@
-from tiddl.core.models.api import (
-    AuthDeviceResponse,
-    AuthResponse,
-    AuthResponseWithRefresh,
-    Favorites,
-    SessionResponse,
-    TrackLyrics,
-    TrackStream,
-    VideoStream,
-)
-from tiddl.core.models.cli import AuthData
+from tiddl.core.models.credentials import AuthData
 from tiddl.core.models.downloader import (
     DownloadOptions,
     DownloadResult,
     ItemPipelineOptions,
     PlanOptions,
 )
-from tiddl.core.models.review import AlbumReview
 from tiddl.core.models.settings import Config
 from tiddl.core.models.tidal.items import (
     AlbumItems,
@@ -27,6 +16,7 @@ from tiddl.core.models.tidal.items import (
     Search,
     SearchArtist,
 )
+from tiddl.core.models.tidal.manifests import TrackManifest, VideoManifest
 from tiddl.core.models.tidal.resources import (
     Album,
     Artist,
@@ -35,6 +25,17 @@ from tiddl.core.models.tidal.resources import (
     Track,
     Video,
 )
+from tiddl.core.models.tidal.responses import (
+    AuthDeviceResponse,
+    AuthResponse,
+    AuthResponseWithRefresh,
+    Favorites,
+    SessionResponse,
+    TrackLyrics,
+    TrackStream,
+    VideoStream,
+)
+from tiddl.core.models.tidal.review import AlbumReview
 
 __all__ = [
     "Album",
@@ -63,7 +64,9 @@ __all__ = [
     "TidalResource",
     "Track",
     "TrackLyrics",
+    "TrackManifest",
     "TrackStream",
     "Video",
+    "VideoManifest",
     "VideoStream",
 ]

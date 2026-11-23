@@ -1,5 +1,3 @@
-from typing import Literal
-
 from requests_cache import DO_NOT_CACHE, EXPIRE_IMMEDIATELY
 
 from tiddl.core.models import (
@@ -22,7 +20,7 @@ from tiddl.core.models import (
     Video,
     VideoStream,
 )
-from tiddl.core.types import ID, StreamVideoQuality, TrackQuality
+from tiddl.core.types import ID, ArtistAlbumsFilter, StreamVideoQuality, TrackQuality
 
 from .client import TidalClient
 
@@ -130,7 +128,7 @@ class TidalAPI:
         artist_id: ID,
         limit: int = Limits.ARTIST_ALBUMS,
         offset: int = 0,
-        filter: Literal["ALBUMS", "EPSANDSINGLES"] = "ALBUMS",
+        filter: ArtistAlbumsFilter = "ALBUMS",
     ):
         return self.client.fetch(
             ArtistAlbumsItems,

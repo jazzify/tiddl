@@ -57,8 +57,6 @@ class VideoStream(BaseModel):
 
 # It seemed like the search API doesn't return `artist.type`, so this is used instead of resources.Artist for search results to avoid validation errors.
 # FIXME: This can be discarded if we are okay with making the `type` field optional in resources.Artist, but I don't think it's my decision to make lol
-
-
 class TrackLyrics(BaseModel):
     isRightToLeft: bool
     lyrics: str

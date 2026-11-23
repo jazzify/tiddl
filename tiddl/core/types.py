@@ -8,6 +8,7 @@ T = TypeVar("T", bound=BaseModel)
 
 # Tidal wire values
 TrackQuality = Literal["LOW", "HIGH", "LOSSLESS", "HI_RES_LOSSLESS"]
+ArtistAlbumsFilter = Literal["ALBUMS", "EPSANDSINGLES"]
 StreamVideoQuality = Literal[
     "AUDIO_ONLY", "LOW", "MEDIUM", "HIGH"  # AUDIO_ONLY is not stable
 ]
@@ -40,6 +41,13 @@ class DownloadStatus(StrEnum):
     SKIPPED_VIDEO_FILTER = "skipped_video_filter"
     SKIPPED_ATMOS_FILTER = "skipped_atmos_filter"
     FAILED = "failed"
+
+
+class PlanErrorKind(StrEnum):
+    # a file template could not be formatted, the item is skipped
+    TEMPLATE = "template"
+    # anything else that went wrong while planning one item or album
+    ITEM = "item"
 
 
 ### CLI

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from tiddl.core.metadata import Cover
+from tiddl.core.metadata.cover import Cover
 from tiddl.core.models import AlbumItemsCredits
 
 

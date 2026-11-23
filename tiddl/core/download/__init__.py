@@ -5,7 +5,6 @@ from .plan import (
     ErrorSink,
     M3UJob,
     PlanError,
-    PlanErrorKind,
     ResourcePlan,
     WorkItem,
 )
@@ -23,7 +22,6 @@ __all__ = [
     "M3UJob",
     "NullReporter",
     "PlanError",
-    "PlanErrorKind",
     "Reporter",
     "ResourcePlan",
     "ResourcePlanner",

@@ -20,7 +20,7 @@ from tiddl.core.constants import (
     QUALITY_COLOR_VIDEO,
     RESULT_MESSAGE,
 )
-from tiddl.core.download import PlanError, PlanErrorKind, Reporter
+from tiddl.core.download import PlanError, Reporter
 from tiddl.core.download.reporter import Handle
 from tiddl.core.exceptions import ApiError, CLIValidationException
 from tiddl.core.models import (
@@ -30,7 +30,7 @@ from tiddl.core.models import (
     Video,
     VideoStream,
 )
-from tiddl.core.types import DownloadStatus
+from tiddl.core.types import DownloadStatus, PlanErrorKind
 
 
 def vibrant_color(item: Track | Video) -> str:

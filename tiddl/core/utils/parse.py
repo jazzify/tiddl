@@ -2,11 +2,10 @@ from base64 import b64decode
 
 from defusedxml.ElementTree import parse
 from m3u8 import M3U8
-from pydantic import BaseModel
 from requests import Session
 
 from tiddl.core.constants import DOLBY_CODECS
-from tiddl.core.models import TrackStream, VideoStream
+from tiddl.core.models import TrackManifest, TrackStream, VideoManifest, VideoStream
 
 
 def parse_manifest_XML(xml_content: str):
@@ -62,12 +61,6 @@ def parse_track_stream(track_stream: TrackStream) -> tuple[list[str], str]:
     | HI_RES_LOSSLESS | m4a        | application/dash+xml      | audio/mp4  |
     """
 
-    class TrackManifest(BaseModel):
-        mimeType: str
-        codecs: str
-        encryptionType: str
-        urls: list[str]
-
     decoded_manifest = b64decode(track_stream.manifest).decode()
 
     match track_stream.manifestMimeType:
@@ -92,10 +85,6 @@ def parse_track_stream(track_stream: TrackStream) -> tuple[list[str], str]:
 
 def parse_video_stream(video_stream: VideoStream) -> list[str]:
     """Parse `video_stream` manifest and return video urls"""
-
-    class VideoManifest(BaseModel):
-        mimeType: str
-        urls: list[str]
 
     decoded_manifest = b64decode(video_stream.manifest).decode()
     manifest = VideoManifest.model_validate_json(decoded_manifest)

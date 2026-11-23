@@ -4,6 +4,7 @@ from tiddl.core.api import TidalAPI
 from tiddl.core.exceptions import ApiError
 from tiddl.core.metadata import Cover, ItemMetadata
 from tiddl.core.models import Album, Config, PlanOptions, TidalResource, Track, Video
+from tiddl.core.types import PlanErrorKind
 from tiddl.core.utils.format import format_template
 
 from .pagination import paginate
@@ -12,7 +13,6 @@ from .plan import (
     ErrorSink,
     M3UJob,
     PlanError,
-    PlanErrorKind,
     ResourcePlan,
     WorkItem,
 )

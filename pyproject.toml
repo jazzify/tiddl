@@ -31,6 +31,7 @@ dependencies = [
 dev = [
     "bandit>=1.9.4",
     "coverage>=7.17.3",
+    "import-linter>=2.17",
     "pytest>=9.2.0",
     "pytest-mock>=3.17.0",
     "ruff>=0.17.6",
@@ -52,3 +53,27 @@ tag_format = "$version"
 version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
+
+# Layers, from the top: each one may import only from the ones below it.
+# Run with `lint-imports`.
+[tool.importlinter]
+root_package = "tiddl"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layers: each layer only imports from the ones below it"
+type = "layers"
+layers = [
+    "tiddl.cli",
+    "tiddl.core.download",
+    "tiddl.core.api | tiddl.core.auth | tiddl.core.metadata | tiddl.core.utils",
+    "tiddl.core.models",
+    "tiddl.core.constants",
+    "tiddl.core.types | tiddl.core.exceptions",
+]
+
+[[tool.importlinter.contracts]]
+name = "core never depends on the CLI or its libraries"
+type = "forbidden"
+source_modules = ["tiddl.core"]
+forbidden_modules = ["tiddl.cli", "typer", "rich"]
