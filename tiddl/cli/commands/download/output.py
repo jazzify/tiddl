@@ -20,9 +20,9 @@ from tiddl.core.constants import (
     QUALITY_COLOR_VIDEO,
     RESULT_MESSAGE,
 )
-from tiddl.core.download import Reporter
+from tiddl.core.download import PlanError, PlanErrorKind, Reporter
 from tiddl.core.download.reporter import Handle
-from tiddl.core.exceptions import CLIValidationException
+from tiddl.core.exceptions import ApiError, CLIValidationException
 from tiddl.core.models import (
     DownloadResult,
     Track,
@@ -190,3 +190,25 @@ class RichOutput(Reporter):
                 self.console.print(
                     f"[red]Error [{vibrant_color(item)}]{item.title}[/] - {result.reason}"
                 )
+
+
+class ErrorReporter:
+    """Prints failures and decides whether they abort the download."""
+
+    def __init__(self, console: Console, raise_errors: bool) -> None:
+        self.console = console
+        self.raise_errors = raise_errors
+
+    def plan_error(self, error: PlanError) -> None:
+        if error.kind is PlanErrorKind.TEMPLATE:
+            self.console.print(
+                f"[red]Wrong Album Template:[/] {error.exc} ({error.context})"
+            )
+            return
+        self.failure(error.exc, error.context)
+
+    def failure(self, exc: Exception, context: str) -> None:
+        label = "API Error" if isinstance(exc, ApiError) else "Error"
+        self.console.print(f"[red]{label}:[/] {exc} ({context})")
+        if self.raise_errors:
+            raise exc

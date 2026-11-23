@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from tiddl.core.models.tidal.resources import Track, Video
 from tiddl.core.types import (
+    ChoiceFilterArtistSingles,
     ChoiceFilterAtmos,
     ChoiceFilterVideos,
     ChoiceQualityTrack,
@@ -25,6 +26,16 @@ class DownloadOptions(BaseModel, frozen=True):
     atmos_filter: ChoiceFilterAtmos = "none"
 
 
+class PlanOptions(BaseModel, frozen=True):
+    # replaces the per-resource template from the config when not empty
+    template: str = ""
+    track_quality: ChoiceQualityTrack
+    video_quality: ChoiceQualityVideo
+    videos_filter: ChoiceFilterVideos
+    singles_filter: ChoiceFilterArtistSingles
+    download_path: Path
+
+
 class ItemPipelineOptions(BaseModel, frozen=True):
     metadata_enable: bool
     metadata_lyrics: bool
@@ -40,7 +51,6 @@ class DownloadResult:
     status: DownloadStatus
     item: Track | Video
     path: Path | None = None
-    # extra detail: the filter mode for SKIPPED_*, the API message for FAILED
     reason: str = ""
 
     @property

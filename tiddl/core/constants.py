@@ -9,7 +9,7 @@ from tiddl.core.types import (
 )
 
 ### CLI
-ENV_KEY = "TIDDL_PATH"
+ENV_APP_PATH = "TIDDL_PATH"
 APP_DIR_NAME = ".tiddl"
 # Config
 CONFIG_FILENAME = "config.toml"
@@ -51,7 +51,7 @@ API_URL = "https://api.tidal.com/v1"
 MAX_RETRIES = 5
 RETRY_DELAY = 2
 # Client
-ENV_KEY = "TIDDL_AUTH"
+ENV_AUTH = "TIDDL_AUTH"
 AUTH_URL = "https://auth.tidal.com/v1/oauth2"
 BASE64_THING = "NE4zbjZRMXg5NUxMNUs3cDtvS09YZkpXMzcxY1g2eGFaMFB5aGdHTkJkTkxsQlpkNEFLS1lvdWdNamlrPQ=="
 # Parse

@@ -6,7 +6,7 @@ from tomllib import loads as parse_toml
 from tiddl.core.constants import (
     APP_DIR_NAME,
     CONFIG_FILENAME,
-    ENV_KEY,
+    ENV_APP_PATH,
 )
 from tiddl.core.models import Config
 
@@ -28,7 +28,7 @@ def load_config_file(config_file: Path) -> Config:
     return config
 
 
-def get_app_path(env_key: str = ENV_KEY) -> Path:
+def get_app_path(env_key: str = ENV_APP_PATH) -> Path:
     if environ.get(env_key):
         return Path(environ[env_key])
     return Path.home() / APP_DIR_NAME

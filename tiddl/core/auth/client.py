@@ -4,7 +4,7 @@ from os import environ
 
 from requests import request
 
-from tiddl.core.constants import AUTH_URL, BASE64_THING, ENV_KEY
+from tiddl.core.constants import AUTH_URL, BASE64_THING, ENV_AUTH
 from tiddl.core.exceptions import AuthClientError
 from tiddl.core.types import JSON
 
@@ -13,7 +13,7 @@ log = logging.getLogger("tiddl")
 
 def get_auth_credentials() -> tuple[str, str]:
     client_id, client_secret = base64.b64decode(BASE64_THING).decode().split(";")
-    env_value = environ.get(ENV_KEY, None)
+    env_value = environ.get(ENV_AUTH, None)
     if env_value:
         client_id, client_secret = env_value.split(";")
     log.debug(f"{client_id=}, {bool(env_value)=}")
