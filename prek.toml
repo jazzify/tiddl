@@ -58,3 +58,11 @@ name = "bandit checks"
 language = "system"
 entry = "uv run bandit"
 exclude = '^tests/'
+
+[[repos.hooks]]
+id = "import-linter"
+name = "import-linter checks"
+entry = "uv run lint-imports"
+language = "system"
+pass_filenames = false
+types = ["python"]

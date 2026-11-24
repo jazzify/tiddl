@@ -14,13 +14,14 @@ from tiddl.core.models import (
     Video,
     VideoStream,
 )
+from tiddl.core.protocols import Reporter
 from tiddl.core.types import DownloadStatus, StreamVideoQuality, TrackQuality
 from tiddl.core.utils import parse_track_stream, parse_video_stream
 from tiddl.core.utils.ffmpeg import convert_to_mp4, extract_flac
 
 from .filters import atmos_filter_skips, video_filter_skips
 from .paths import get_existing_track_filename, resolve_existing_path_case
-from .reporter import NullReporter, Reporter
+from .reporter import NullReporter
 from .transport import stream_to_file
 
 log = getLogger(__name__)

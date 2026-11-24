@@ -4,17 +4,13 @@ from pathlib import Path
 
 from tiddl.core.api import TidalAPI
 from tiddl.core.exceptions import ApiError
-from tiddl.core.metadata import (
-    Cover,
-    ItemMetadata,
-    add_track_metadata,
-    add_video_metadata,
-)
-from tiddl.core.models import ItemPipelineOptions, Track, Video
+from tiddl.core.metadata import add_track_metadata, add_video_metadata
+from tiddl.core.models import Cover, ItemMetadata, ItemPipelineOptions, Track, Video
+from tiddl.core.protocols import Reporter
 
 from .downloader import Downloader
 from .lrc import write_lrc_file
-from .reporter import NullReporter, Reporter
+from .reporter import NullReporter
 
 log = getLogger(__name__)
 

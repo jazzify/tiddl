@@ -2,20 +2,26 @@ from logging import getLogger
 
 from tiddl.core.api import TidalAPI
 from tiddl.core.exceptions import ApiError
-from tiddl.core.metadata import Cover, ItemMetadata
-from tiddl.core.models import Album, Config, PlanOptions, TidalResource, Track, Video
+from tiddl.core.models import (
+    Album,
+    Config,
+    Cover,
+    CoverJob,
+    ItemMetadata,
+    M3UJob,
+    PlanError,
+    PlanOptions,
+    ResourcePlan,
+    TidalResource,
+    Track,
+    Video,
+    WorkItem,
+)
+from tiddl.core.protocols import ErrorSink
 from tiddl.core.types import PlanErrorKind
 from tiddl.core.utils.format import format_template
 
 from .pagination import paginate
-from .plan import (
-    CoverJob,
-    ErrorSink,
-    M3UJob,
-    PlanError,
-    ResourcePlan,
-    WorkItem,
-)
 from .quality import get_item_quality
 
 log = getLogger(__name__)

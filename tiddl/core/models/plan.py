@@ -1,9 +1,9 @@
-from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from tiddl.core.metadata import Cover, ItemMetadata
-from tiddl.core.models import Track, Video
+from tiddl.core.models.cover import Cover
+from tiddl.core.models.item_metadata import ItemMetadata
+from tiddl.core.models.tidal.resources import Track, Video
 from tiddl.core.types import ChoiceResourceM3U, PlanErrorKind
 
 
@@ -46,8 +46,3 @@ class PlanError:
     exc: Exception
     # what was being planned, ready to be shown to the user
     context: str
-
-
-# Called for every error that does not stop planning. The sink decides what
-# to do: print it, log it, or re-raise `error.exc` to abort planning.
-ErrorSink = Callable[[PlanError], None]

@@ -1,17 +1,13 @@
 import asyncio
-from collections.abc import Callable, Iterable
+from collections.abc import Iterable
 from pathlib import Path
 
-from tiddl.core.models import Config, TidalResource
+from tiddl.core.models import Config, ResourcePlan, TidalResource
+from tiddl.core.protocols import FailureSink
 from tiddl.core.utils.m3u import save_m3u
 
 from .pipeline import ItemPipeline
-from .plan import ResourcePlan
 from .planner import ResourcePlanner
-
-# Called for every failure of a resource or a labeled plan, with a description
-# of what failed. The sink decides what to do: print it, or re-raise to abort.
-type FailureSink = Callable[[Exception, str], None]
 
 
 async def run_plan(

@@ -20,16 +20,16 @@ from tiddl.core.constants import (
     QUALITY_COLOR_VIDEO,
     RESULT_MESSAGE,
 )
-from tiddl.core.download import PlanError, Reporter
-from tiddl.core.download.reporter import Handle
 from tiddl.core.exceptions import ApiError, CLIValidationException
 from tiddl.core.models import (
     DownloadResult,
+    PlanError,
     Track,
     TrackStream,
     Video,
     VideoStream,
 )
+from tiddl.core.protocols import Handle, Reporter
 from tiddl.core.types import DownloadStatus, PlanErrorKind
 
 

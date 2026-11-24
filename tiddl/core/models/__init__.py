@@ -1,9 +1,18 @@
+from tiddl.core.models.cover import Cover
 from tiddl.core.models.credentials import AuthData
 from tiddl.core.models.downloader import (
     DownloadOptions,
     DownloadResult,
     ItemPipelineOptions,
     PlanOptions,
+)
+from tiddl.core.models.item_metadata import ItemMetadata
+from tiddl.core.models.plan import (
+    CoverJob,
+    M3UJob,
+    PlanError,
+    ResourcePlan,
+    WorkItem,
 )
 from tiddl.core.models.settings import Config
 from tiddl.core.models.tidal.items import (
@@ -50,14 +59,20 @@ __all__ = [
     "AuthResponse",
     "AuthResponseWithRefresh",
     "Config",
+    "Cover",
+    "CoverJob",
     "DownloadOptions",
     "DownloadResult",
     "Favorites",
+    "ItemMetadata",
     "ItemPipelineOptions",
+    "M3UJob",
     "MixItems",
+    "PlanError",
     "PlanOptions",
     "Playlist",
     "PlaylistItems",
+    "ResourcePlan",
     "Search",
     "SearchArtist",
     "SessionResponse",
@@ -69,4 +84,5 @@ __all__ = [
     "Video",
     "VideoManifest",
     "VideoStream",
+    "WorkItem",
 ]

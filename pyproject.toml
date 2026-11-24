@@ -54,8 +54,6 @@ version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
 
-# Layers, from the top: each one may import only from the ones below it.
-# Run with `lint-imports`.
 [tool.importlinter]
 root_package = "tiddl"
 include_external_packages = true
@@ -66,7 +64,7 @@ type = "layers"
 layers = [
     "tiddl.cli",
     "tiddl.core.download",
-    "tiddl.core.api | tiddl.core.auth | tiddl.core.metadata | tiddl.core.utils",
+    "tiddl.core.api | tiddl.core.auth | tiddl.core.metadata | tiddl.core.utils | tiddl.core.protocols",
     "tiddl.core.models",
     "tiddl.core.constants",
     "tiddl.core.types | tiddl.core.exceptions",

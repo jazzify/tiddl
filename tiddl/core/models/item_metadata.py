@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from tiddl.core.metadata.cover import Cover
-from tiddl.core.models import AlbumItemsCredits
+from tiddl.core.models.cover import Cover
+from tiddl.core.models.tidal.items import AlbumItemsCredits
 
 
 @dataclass
