@@ -6,11 +6,6 @@ from typing import Annotated
 import typer
 
 from tiddl.cli.commands.auth import refresh
-from tiddl.cli.commands.subcommands import (
-    fav_subcommand,
-    search_subcommand,
-    url_subcommand,
-)
 from tiddl.cli.ctx import Context
 from tiddl.cli.settings import CONFIG
 from tiddl.core.models import (
@@ -27,6 +22,11 @@ from tiddl.core.types import (
 )
 
 from .session import download_resources
+from .subcommands import (
+    fav_subcommand,
+    search_subcommand,
+    url_subcommand,
+)
 
 download_command = typer.Typer(name="download")
 download_command.add_typer(url_subcommand)
