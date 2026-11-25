@@ -24,7 +24,6 @@ def load_config_file(config_file: Path) -> Config:
     config = Config.model_validate(toml_dict, strict=True)
 
     log.debug("loaded config from file")
-
     return config
 
 

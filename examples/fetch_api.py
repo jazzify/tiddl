@@ -1,9 +1,9 @@
-from tiddl.cli.settings import APP_PATH
+from tiddl.core.api import TidalAPI, TidalClient
+from tiddl.core.settings import APP_PATH
 
 # we will utilize some functions from tiddl cli
 # and use `APP_PATH` that is located at our /home_directory/.tiddl
-from tiddl.cli.utils.auth import load_auth_data
-from tiddl.core.api import TidalAPI, TidalClient
+from tiddl.core.utils.auth import load_auth_data
 
 # !! remember to be logged in, use `tiddl auth login`
 # it will save auth token in /home_directory/.tiddl/auth.json

@@ -4,12 +4,12 @@ from time import time
 import typer
 from rich.console import Console
 
-from tiddl.cli.settings import APP_PATH
-from tiddl.cli.utils.auth.core import load_auth_data, save_auth_data
 from tiddl.core.api import TidalAPI, TidalClient
 from tiddl.core.auth import AuthAPI
 from tiddl.core.exceptions import CLIValidationException
 from tiddl.core.models import TidalResource
+from tiddl.core.settings import APP_PATH
+from tiddl.core.utils.auth import load_auth_data, save_auth_data
 
 
 class ContextObject:

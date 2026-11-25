@@ -7,12 +7,12 @@ import typer
 
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.ctx import Context
-from tiddl.cli.settings import CONFIG
 from tiddl.core.models import (
     DownloadOptions,
     ItemPipelineOptions,
     PlanOptions,
 )
+from tiddl.core.settings import CONFIG
 from tiddl.core.types import (
     ChoiceFilterArtistSingles,
     ChoiceFilterAtmos,

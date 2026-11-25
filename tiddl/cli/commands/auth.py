@@ -5,9 +5,10 @@ from typing import Annotated
 import typer
 from rich.console import Console
 
-from tiddl.cli.utils.auth.core import AuthData, load_auth_data, save_auth_data
 from tiddl.core.auth import AuthAPI
 from tiddl.core.exceptions import AuthClientError
+from tiddl.core.models import AuthData
+from tiddl.core.utils.auth import load_auth_data, save_auth_data
 
 console = Console()
 
@@ -16,7 +17,7 @@ auth_command = typer.Typer(
 )
 
 
-# TODO add context and load auth data from ctx
+# TODO: add context and load auth data from ctx
 @auth_command.command(help="Login with your Tidal account.")
 def login(
     NO_BROWSER: Annotated[
@@ -24,6 +25,7 @@ def login(
         typer.Option("--no-browser", "-n", help="Do not open browser."),
     ] = False,
 ):
+
     loaded_auth_data = load_auth_data()
 
     if loaded_auth_data.token:

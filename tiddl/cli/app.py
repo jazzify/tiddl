@@ -6,8 +6,8 @@ from rich.console import Console
 
 from tiddl.cli import commands
 from tiddl.cli.ctx import Context, ContextObject
-from tiddl.cli.settings import APP_PATH, CONFIG
 from tiddl.core.constants import VERSION
+from tiddl.core.settings import APP_PATH, CONFIG
 from tiddl.core.utils.ffmpeg import is_ffmpeg_installed as ifs
 
 log = logging.getLogger("tiddl")
