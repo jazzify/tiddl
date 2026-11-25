@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from tiddl.core.types import (
@@ -56,3 +57,6 @@ AUTH_URL = "https://auth.tidal.com/v1/oauth2"
 BASE64_THING = "NE4zbjZRMXg5NUxMNUs3cDtvS09YZkpXMzcxY1g2eGFaMFB5aGdHTkJkTkxsQlpkNEFLS1lvdWdNamlrPQ=="
 # Parse
 DOLBY_CODECS = ["eac3", "ac4"]
+# Auth
+FILE_WRITE_FLAGS = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+FILE_WRITE_MODE = 0o600  # Owner: read & write; Group & Others: no access

@@ -34,7 +34,7 @@ def test_save_auth_data(tmp_path: Path):
         country_code="country_code",
     )
 
-    save_auth_data(auth_data=auth_data, file=file)
+    save_auth_data(auth_data=auth_data, file_path=file)
 
     loaded_auth_data = AuthData.model_validate_json(file.read_text())
 
