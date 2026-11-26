@@ -1,6 +1,6 @@
 import pytest
 
-from tiddl.core.models import TidalResource
+from tiddl.core.models.tidal.resources import TidalResource
 from tiddl.core.types import ResourceTypeLiteral
 
 valid_test_data = [

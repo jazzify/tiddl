@@ -1,7 +1,8 @@
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.core.models import Config, Track, Video
+from tiddl.core.models.settings import Config
+from tiddl.core.models.tidal.items import Track, Video
 from tiddl.core.types import ChoiceResourceM3U
 
 log = getLogger(__name__)

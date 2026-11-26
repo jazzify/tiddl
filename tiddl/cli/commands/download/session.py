@@ -1,18 +1,16 @@
 from rich.live import Live
 
 from tiddl.cli.ctx import ContextObject
-from tiddl.core.download import (
-    Downloader,
-    DownloadRunner,
-    ItemPipeline,
-    ResourcePlanner,
-)
-from tiddl.core.models import (
-    Config,
+from tiddl.core.download.downloader import Downloader
+from tiddl.core.download.pipeline import ItemPipeline
+from tiddl.core.download.planner import ResourcePlanner
+from tiddl.core.download.runner import DownloadRunner
+from tiddl.core.models.downloader import (
     DownloadOptions,
     ItemPipelineOptions,
     PlanOptions,
 )
+from tiddl.core.models.settings import Config
 
 from .output import ErrorReporter, RichOutput
 

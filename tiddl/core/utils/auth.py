@@ -6,7 +6,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from tiddl.core.constants import FILE_WRITE_FLAGS, FILE_WRITE_MODE
-from tiddl.core.models import AuthData
+from tiddl.core.models.credentials import AuthData
 from tiddl.core.settings import AUTH_DATA_FILE
 
 log = getLogger(__name__)

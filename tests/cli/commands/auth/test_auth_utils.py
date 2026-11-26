@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tiddl.core.models import AuthData
+from tiddl.core.models.credentials import AuthData
 from tiddl.core.utils.auth import load_auth_data, save_auth_data
 
 

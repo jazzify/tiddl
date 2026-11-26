@@ -8,22 +8,26 @@ from tiddl.core.api.api import (
     TidalAPI,
     TidalClient,
 )
-from tiddl.core.models import (
-    Album,
+from tiddl.core.models.tidal.items import (
     AlbumItems,
     AlbumItemsCredits,
-    Artist,
     ArtistAlbumsItems,
-    Favorites,
     MixItems,
-    Playlist,
     PlaylistItems,
     Search,
-    SessionResponse,
+)
+from tiddl.core.models.tidal.resources import (
+    Album,
+    Artist,
+    Playlist,
     Track,
+    Video,
+)
+from tiddl.core.models.tidal.responses import (
+    Favorites,
+    SessionResponse,
     TrackLyrics,
     TrackStream,
-    Video,
     VideoStream,
 )
 

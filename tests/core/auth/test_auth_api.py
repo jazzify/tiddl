@@ -4,7 +4,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from tiddl.core.auth.api import AuthAPI
-from tiddl.core.models import (
+from tiddl.core.models.tidal.responses import (
     AuthDeviceResponse,
     AuthResponse,
     AuthResponseWithRefresh,

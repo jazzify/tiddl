@@ -7,7 +7,7 @@ import typer
 
 from tiddl.cli.commands.auth import refresh
 from tiddl.cli.ctx import Context
-from tiddl.core.models import (
+from tiddl.core.models.downloader import (
     DownloadOptions,
     ItemPipelineOptions,
     PlanOptions,

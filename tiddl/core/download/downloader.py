@@ -3,21 +3,16 @@ from dataclasses import dataclass
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.core.api import TidalAPI
+from tiddl.core.api.api import TidalAPI
 from tiddl.core.constants import QUALITIES_TRACK, QUALITIES_VIDEO
 from tiddl.core.exceptions import ApiError, FFmpegError
-from tiddl.core.models import (
-    DownloadOptions,
-    DownloadResult,
-    Track,
-    TrackStream,
-    Video,
-    VideoStream,
-)
+from tiddl.core.models.downloader import DownloadOptions, DownloadResult
+from tiddl.core.models.tidal.items import Track, Video
+from tiddl.core.models.tidal.responses import TrackStream, VideoStream
 from tiddl.core.protocols import Reporter
 from tiddl.core.types import DownloadStatus, StreamVideoQuality, TrackQuality
-from tiddl.core.utils import parse_track_stream, parse_video_stream
 from tiddl.core.utils.ffmpeg import convert_to_mp4, extract_flac
+from tiddl.core.utils.parse import parse_track_stream, parse_video_stream
 
 from .filters import atmos_filter_skips, video_filter_skips
 from .paths import get_existing_track_filename, resolve_existing_path_case

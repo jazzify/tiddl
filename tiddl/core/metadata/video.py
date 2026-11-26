@@ -2,7 +2,7 @@ from pathlib import Path
 
 from mutagen.easymp4 import EasyMP4 as MutagenEasyMP4
 
-from tiddl.core.models import Video
+from tiddl.core.models.tidal.items import Video
 
 
 def add_video_metadata(path: Path, video: Video):

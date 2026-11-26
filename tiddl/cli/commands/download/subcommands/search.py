@@ -5,15 +5,15 @@ from rich.panel import Panel
 from rich.table import Table
 
 from tiddl.cli.ctx import Context
-from tiddl.core.models import (
+from tiddl.core.models.tidal.items import (
     Album,
     Playlist,
     Search,
     SearchArtist,
-    TidalResource,
     Track,
     Video,
 )
+from tiddl.core.models.tidal.resources import TidalResource
 
 search_subcommand = typer.Typer()
 

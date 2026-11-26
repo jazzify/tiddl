@@ -8,7 +8,7 @@ from tiddl.core.constants import (
     CONFIG_FILENAME,
     ENV_APP_PATH,
 )
-from tiddl.core.models import Config
+from tiddl.core.models.settings import Config
 
 log = getLogger(__name__)
 

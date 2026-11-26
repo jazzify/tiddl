@@ -1,4 +1,4 @@
-from tiddl.core.models import Track, Video
+from tiddl.core.models.tidal.items import Track, Video
 from tiddl.core.types import ChoiceFilterAtmos, ChoiceFilterVideos
 
 

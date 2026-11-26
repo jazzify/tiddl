@@ -1,14 +1,10 @@
 from collections.abc import Callable
 from typing import Any, Protocol
 
-from tiddl.core.models import (
-    DownloadResult,
-    PlanError,
-    Track,
-    TrackStream,
-    Video,
-    VideoStream,
-)
+from tiddl.core.models.downloader import DownloadResult
+from tiddl.core.models.plan import PlanError
+from tiddl.core.models.tidal.items import Track, Video
+from tiddl.core.models.tidal.responses import TrackStream, VideoStream
 
 # opaque token: whatever `on_start` returns is passed back to `on_progress`/`on_done`
 type Handle = Any

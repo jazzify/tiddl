@@ -3,7 +3,7 @@ from typing import Annotated
 import typer
 
 from tiddl.cli.ctx import Context
-from tiddl.core.models import TidalResource
+from tiddl.core.models.tidal.resources import TidalResource
 
 url_subcommand = typer.Typer()
 

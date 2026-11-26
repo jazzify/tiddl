@@ -1,22 +1,14 @@
 from logging import getLogger
 
-from tiddl.core.api import TidalAPI
+from tiddl.core.api.api import TidalAPI
 from tiddl.core.exceptions import ApiError
-from tiddl.core.models import (
-    Album,
-    Config,
-    Cover,
-    CoverJob,
-    ItemMetadata,
-    M3UJob,
-    PlanError,
-    PlanOptions,
-    ResourcePlan,
-    TidalResource,
-    Track,
-    Video,
-    WorkItem,
-)
+from tiddl.core.models.cover import Cover
+from tiddl.core.models.downloader import PlanOptions
+from tiddl.core.models.item_metadata import ItemMetadata
+from tiddl.core.models.plan import CoverJob, M3UJob, PlanError, ResourcePlan, WorkItem
+from tiddl.core.models.settings import Config
+from tiddl.core.models.tidal.items import Album, Track, Video
+from tiddl.core.models.tidal.resources import TidalResource
 from tiddl.core.protocols import ErrorSink
 from tiddl.core.types import PlanErrorKind
 from tiddl.core.utils.format import format_template

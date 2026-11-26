@@ -1,25 +1,27 @@
 from requests_cache import DO_NOT_CACHE, EXPIRE_IMMEDIATELY
 
-from tiddl.core.models import (
+from tiddl.core.models.tidal.items import (
     Album,
     AlbumItems,
     AlbumItemsCredits,
-    AlbumReview,
-    Artist,
     ArtistAlbumsItems,
     ArtistVideosItems,
-    Favorites,
     MixItems,
     Playlist,
     PlaylistItems,
     Search,
-    SessionResponse,
     Track,
+    Video,
+)
+from tiddl.core.models.tidal.resources import Artist
+from tiddl.core.models.tidal.responses import (
+    Favorites,
+    SessionResponse,
     TrackLyrics,
     TrackStream,
-    Video,
     VideoStream,
 )
+from tiddl.core.models.tidal.review import AlbumReview
 from tiddl.core.types import ID, ArtistAlbumsFilter, StreamVideoQuality, TrackQuality
 
 from .client import TidalClient

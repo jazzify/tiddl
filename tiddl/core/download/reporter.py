@@ -1,4 +1,6 @@
-from tiddl.core.models import DownloadResult, Track, TrackStream, Video, VideoStream
+from tiddl.core.models.downloader import DownloadResult
+from tiddl.core.models.tidal.items import Track, Video
+from tiddl.core.models.tidal.responses import TrackStream, VideoStream
 from tiddl.core.protocols import Handle
 
 

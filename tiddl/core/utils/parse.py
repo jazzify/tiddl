@@ -5,7 +5,8 @@ from m3u8 import M3U8
 from requests import Session
 
 from tiddl.core.constants import DOLBY_CODECS
-from tiddl.core.models import TrackManifest, TrackStream, VideoManifest, VideoStream
+from tiddl.core.models.tidal.manifests import TrackManifest, VideoManifest
+from tiddl.core.models.tidal.responses import TrackStream, VideoStream
 
 
 def parse_manifest_XML(xml_content: str):

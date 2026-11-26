@@ -1,6 +1,6 @@
 from requests import Session
 
-from tiddl.core.models import TrackStream, VideoStream
+from tiddl.core.models.tidal.responses import TrackStream, VideoStream
 
 from .parse import parse_track_stream, parse_video_stream
 

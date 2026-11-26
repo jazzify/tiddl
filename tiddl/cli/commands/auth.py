@@ -5,9 +5,9 @@ from typing import Annotated
 import typer
 from rich.console import Console
 
-from tiddl.core.auth import AuthAPI
+from tiddl.core.auth.api import AuthAPI
 from tiddl.core.exceptions import AuthClientError
-from tiddl.core.models import AuthData
+from tiddl.core.models.credentials import AuthData
 from tiddl.core.utils.auth import load_auth_data, save_auth_data
 
 console = Console()

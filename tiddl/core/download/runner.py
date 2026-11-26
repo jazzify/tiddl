@@ -2,7 +2,9 @@ import asyncio
 from collections.abc import Iterable
 from pathlib import Path
 
-from tiddl.core.models import Config, ResourcePlan, TidalResource
+from tiddl.core.models.plan import ResourcePlan
+from tiddl.core.models.settings import Config
+from tiddl.core.models.tidal.resources import TidalResource
 from tiddl.core.protocols import FailureSink
 from tiddl.core.utils.m3u import save_m3u
 

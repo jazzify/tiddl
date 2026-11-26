@@ -2,10 +2,14 @@ import os
 from logging import getLogger
 from pathlib import Path
 
-from tiddl.core.api import TidalAPI
+from tiddl.core.api.api import TidalAPI
 from tiddl.core.exceptions import ApiError
-from tiddl.core.metadata import add_track_metadata, add_video_metadata
-from tiddl.core.models import Cover, ItemMetadata, ItemPipelineOptions, Track, Video
+from tiddl.core.metadata.track import add_track_metadata
+from tiddl.core.metadata.video import add_video_metadata
+from tiddl.core.models.cover import Cover
+from tiddl.core.models.downloader import ItemPipelineOptions
+from tiddl.core.models.item_metadata import ItemMetadata
+from tiddl.core.models.tidal.items import Track, Video
 from tiddl.core.protocols import Reporter
 
 from .downloader import Downloader
