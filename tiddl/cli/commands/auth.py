@@ -3,14 +3,12 @@ from time import sleep, time
 from typing import Annotated
 
 import typer
-from rich.console import Console
 
+from tiddl.cli.console import console
 from tiddl.core.auth.api import AuthAPI
 from tiddl.core.exceptions import AuthClientError
 from tiddl.core.models.credentials import AuthData
 from tiddl.core.utils.auth import load_auth_data, save_auth_data
-
-console = Console()
 
 auth_command = typer.Typer(
     name="auth", help="Manage Tidal authentication.", no_args_is_help=True
@@ -29,7 +27,7 @@ def login(
     loaded_auth_data = load_auth_data()
 
     if loaded_auth_data.token:
-        console.print("[cyan bold]Already logged in.")
+        console.print("[dim_info]Already logged in.")
         raise typer.Exit()
 
     auth_api = AuthAPI()
@@ -60,7 +58,7 @@ def login(
                     country_code=auth.user.countryCode,
                 )
                 save_auth_data(auth_data)
-                status.console.print("[bold green]Logged in!")
+                status.console.print("[success]Logged in!")
                 break
 
             except AuthClientError as e:
@@ -74,7 +72,7 @@ def login(
 
                 if e.error == "expired_token":
                     status.console.print(
-                        "\n[bold red]Time for authentication has expired."
+                        "\n[error]Time for authentication has expired."
                     )
                     break
 
@@ -94,7 +92,7 @@ def logout(
 
     # If there's no token, we are effectively already logged out locally
     if not auth_data.token:
-        console.print("[yellow]No active session found.")
+        console.print("[warning]No active session found.")
         return
 
     try:
@@ -102,19 +100,19 @@ def logout(
         api.logout_token(auth_data.token)
         success = True
     except Exception as error:
-        console.print(f"[bold red]Logout request failed: {error}")
+        console.print(f"[error]Logout request failed: {error}")
         success = False
 
     if not (success or force):
-        console.print("[bold yellow]Local session retained. Use --force to override.")
+        console.print("[warning]Local session retained. Use --force to override.")
         return
 
     save_auth_data(AuthData())
 
     if success:
-        console.print("[bold green]Logged out successfully!")
+        console.print("[success]Logged out successfully!")
     elif force:
-        console.print("[bold green]Token removed!")
+        console.print("[success]Token removed!")
 
 
 @auth_command.command(help="Refreshes your token in app.")
@@ -138,7 +136,7 @@ def refresh(
     loaded_auth_data = load_auth_data()
 
     if loaded_auth_data.refresh_token is None:
-        console.print("[bold red]Not logged in.")
+        console.print("[error]Not logged in.")
         raise typer.Exit()
 
     if time() < (loaded_auth_data.expires_at - EARLY_EXPIRE_TIME) and not FORCE:
@@ -147,7 +145,7 @@ def refresh(
         hours, remainder = divmod(remaining.seconds, 3600)
         minutes, _ = divmod(remainder, 60)
         console.print(
-            f"[green]Auth token expires in {remaining.days}d {hours}h {minutes}m"
+            f"[dim_info]Auth token expires in {remaining.days}d {hours}h {minutes}m"
         )
         return
 
@@ -159,4 +157,4 @@ def refresh(
 
     save_auth_data(loaded_auth_data)
 
-    console.print("[bold green]Auth token has been refreshed!")
+    console.print("[dim_info]Auth token has been refreshed!")

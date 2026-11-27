@@ -1,17 +1,14 @@
 from logging import getLogger
 
 import typer
-from rich.console import Console
 
 from tiddl.cli.commands.auth import refresh
-from tiddl.cli.commands.subcommands import url_subcommand
+from tiddl.cli.console import console
 from tiddl.cli.ctx import Context
 
 export_command = typer.Typer(name="export")
-export_command.add_typer(url_subcommand)
 
 log = getLogger(__name__)
-console = Console()
 
 
 @export_command.callback(no_args_is_help=True)
@@ -34,6 +31,6 @@ def export_callback(ctx: Context):
     # or export all in one
 
     def handle_export():
-        console.print(ctx.obj.resources)
+        console.print("WIP")
 
     ctx.call_on_close(handle_export)

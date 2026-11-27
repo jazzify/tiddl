@@ -1,5 +1,6 @@
 from rich.live import Live
 
+from tiddl.cli.console import console
 from tiddl.cli.ctx import ContextObject
 from tiddl.core.download.downloader import Downloader
 from tiddl.core.download.pipeline import ItemPipeline
@@ -25,8 +26,8 @@ async def download_resources(
 ) -> None:
     """Download `obj.resources`, showing progress and errors in the console."""
 
-    rich_output = RichOutput(obj.console)
-    error_reporter = ErrorReporter(obj.console, raise_errors)
+    rich_output = RichOutput(console)
+    error_reporter = ErrorReporter(console, raise_errors)
     runner = DownloadRunner(
         planner=ResourcePlanner(
             api=obj.api,
@@ -52,7 +53,7 @@ async def download_resources(
     with Live(
         rich_output.group,
         refresh_per_second=10,
-        console=obj.console,
+        console=console,
         transient=True,
     ):
         await runner.run(obj.resources)

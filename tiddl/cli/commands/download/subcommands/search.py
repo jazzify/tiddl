@@ -4,6 +4,7 @@ import typer
 from rich.panel import Panel
 from rich.table import Table
 
+from tiddl.cli.console import console
 from tiddl.cli.ctx import Context
 from tiddl.core.models.tidal.items import (
     Album,
@@ -70,8 +71,8 @@ def search(
                         f"{top_hit_type}/{_display_id(top_hit.value)}"
                     )
                 )
-                ctx.obj.console.print(
-                    f"[green]Automatically added top hit: {top_hit.type.title()} '{_display_name(top_hit.value)}'"
+                console.print(
+                    f"[success]Automatically added top hit: {top_hit.type.title()} '{_display_name(top_hit.value)}'"
                 )
                 return
             else:
@@ -102,9 +103,9 @@ def search(
         table.add_row(str(i), resource_type, name, id)
 
     panel = Panel(table, title="Search Results", highlight=True, expand=True)
-    ctx.obj.console.print(panel)
-    selection = ctx.obj.console.input(
-        "[bold green]Enter the number of the resource to add to your list (comma-separated for multiple, q/empty = quit): "
+    console.print(panel)
+    selection = console.input(
+        "[info]Enter the number of the resource to add to your list (comma-separated for multiple, q/empty = quit): "
     )
     selected_numbers = [s.strip() for s in selection.split(",")]
 
@@ -113,7 +114,7 @@ def search(
             return
 
         if not num.isdigit() or int(num) < 1 or int(num) > len(results_to_display):
-            ctx.obj.console.print(f"[red]Invalid selection: {num}")
+            console.print(f"[error]Invalid selection: {num}")
             continue
 
         selected_resource = results_to_display[int(num) - 1]
@@ -121,7 +122,7 @@ def search(
         ctx.obj.resources.append(
             TidalResource.from_string(f"{resource_type.lower()}/{id}")
         )
-        ctx.obj.console.print(f"[green]Added {resource_type} '{name}' to your list")
+        console.print(f"[success]Added {resource_type} '{name}' to your list")
 
 
 def _display_name(item) -> str:
@@ -130,7 +131,7 @@ def _display_name(item) -> str:
     elif isinstance(item, Video):
         return f"{item.artist or item.artists[0].name or ''} - {item.title}"
     elif isinstance(item, (Track, Album)):
-        return f"{item.artist or item.artists[0].name or ''} - {item.title} [blue][{', '.join(item.audioModes)}][/]"
+        return f"{item.artist or item.artists[0].name or ''} - {item.title} [dim_info][{', '.join(item.audioModes)}][/]"
     elif isinstance(item, (Playlist)):
         return item.title
     else:

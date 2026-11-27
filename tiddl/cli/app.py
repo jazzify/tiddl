@@ -2,9 +2,9 @@ import logging
 from typing import Annotated
 
 import typer
-from rich.console import Console
 
 from tiddl.cli import commands
+from tiddl.cli.console import console
 from tiddl.cli.ctx import Context, ContextObject
 from tiddl.core.constants import VERSION
 from tiddl.core.settings import APP_PATH, CONFIG
@@ -44,11 +44,9 @@ def callback(
     else:
         debug_path = None
 
-    ctx.obj = ContextObject(
-        api_omit_cache=OMIT_CACHE, console=Console(), debug_path=debug_path
-    )
+    ctx.obj = ContextObject(api_omit_cache=OMIT_CACHE, debug_path=debug_path)
 
     if not is_ffmpeg_installed:
-        ctx.obj.console.print(
-            "[yellow]WARNING ffmpeg is not installed, tiddl might not work properly"
+        console.print(
+            "[warning]WARNING ffmpeg is not installed, tiddl might not work properly"
         )

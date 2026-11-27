@@ -2,6 +2,7 @@ from typing import Annotated, cast
 
 import typer
 
+from tiddl.cli.console import console
 from tiddl.cli.ctx import Context
 from tiddl.core.models.tidal.resources import TidalResource
 from tiddl.core.types import ResourceTypeLiteral
@@ -39,7 +40,7 @@ def fav(
         for resource_id in resources:
             ctx.obj.resources.append(TidalResource(id=resource_id, type=resource_type))
 
-    ctx.obj.console.print(f"[green]Loaded {len(ctx.obj.resources)} resources")
+    console.print(f"[success]Loaded {len(ctx.obj.resources)} resources")
 
     for resource_type, count in stats.items():
-        ctx.obj.console.print(f"{resource_type.title()}s: {count}")
+        console.print(f"{resource_type.title()}s: {count}")

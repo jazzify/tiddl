@@ -20,19 +20,19 @@ VERSION = "v3.4.4"
 # Downloader
 CHUNK_SIZE = 1024**2
 QUALITY_COLOR_TRACK: dict[TrackQuality, str] = {
-    "LOW": "[gray]96 kbps",
-    "HIGH": "[gray]320 kbps",
-    "LOSSLESS": "[cyan]",
-    "HI_RES_LOSSLESS": "[yellow]",
+    "LOW": "[text]96 kbps",
+    "HIGH": "[text]320 kbps",
+    "LOSSLESS": "[info]",
+    "HI_RES_LOSSLESS": "[warning]",
 }
 QUALITY_COLOR_VIDEO: dict[StreamVideoQuality, str] = {
-    "LOW": "[gray]360p",
-    "MEDIUM": "[cyan]720p",
-    "HIGH": "[yellow]1080p",
+    "LOW": "[text]360p",
+    "MEDIUM": "[info]720p",
+    "HIGH": "[warning]1080p",
 }
 RESULT_MESSAGE: dict[DownloadStatus, str] = {
-    DownloadStatus.DOWNLOADED: "[green]Downloaded",
-    DownloadStatus.OVERWRITTEN: "[cyan]Overwrited",
+    DownloadStatus.DOWNLOADED: "[success]Downloaded",
+    DownloadStatus.OVERWRITTEN: "[warning]Overwrited",
 }
 
 ### Core

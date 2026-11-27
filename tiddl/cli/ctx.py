@@ -2,7 +2,6 @@ from pathlib import Path
 from time import time
 
 import typer
-from rich.console import Console
 
 from tiddl.core.api.api import TidalAPI
 from tiddl.core.api.client import TidalClient
@@ -14,7 +13,6 @@ from tiddl.core.utils.auth import load_auth_data, save_auth_data
 
 
 class ContextObject:
-    console: Console
     resources: list[TidalResource]
     auth_api: AuthAPI
     _api: TidalAPI | None
@@ -22,9 +20,10 @@ class ContextObject:
     debug_path: Path | None
 
     def __init__(
-        self, api_omit_cache: bool, debug_path: Path | None, console: Console
+        self,
+        api_omit_cache: bool,
+        debug_path: Path | None,
     ) -> None:
-        self.console = console
         self.resources = []
         self.auth_api = AuthAPI()
         self._api = None

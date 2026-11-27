@@ -46,7 +46,7 @@ def quality_label(stream: TrackStream | VideoStream) -> str:
             f"{label} {stream.bitDepth}-bit, {(stream.sampleRate or 0) / 1000:.1f} kHz"
         )
     if stream.audioMode == "DOLBY_ATMOS":
-        return "[blue]Dolby Atmos[/]"
+        return "[info]Dolby Atmos[/]"
     return label
 
 
@@ -129,13 +129,13 @@ class RichOutput(Reporter):
         return task
 
     def show_stats(self):
-        self.console.print(f"[green]Total downloads: {self.total_downloads}")
+        self.console.print(f"[success]Total downloads: {self.total_downloads}")
 
     def show_item_result(
         self, result_message: str, item_description: str, item_path: Path | None
     ):
         if item_path:
-            description = f"[link={item_path.as_uri()}]{item_description}[/link] [link={item_path.parent.as_uri()}]{item_path.parent}[/link]"
+            description = f"[link={item_path.as_uri()}]{item_description}[/link] [dim_text][link={item_path.parent.as_uri()}]{item_path.parent}[/link][/]"
         else:
             description = item_description
 
@@ -168,23 +168,23 @@ class RichOutput(Reporter):
         match result.status:
             case DownloadStatus.EXISTS:
                 self.show_item_result(
-                    result_message="[yellow]Exists",
-                    item_description=f"[{vibrant_color(item)}]{item.title}",
+                    result_message="[warning]Exists[/]",
+                    item_description=f"[{vibrant_color(item)}]{item.title}[/]",
                     item_path=result.path,
                 )
             case DownloadStatus.NOT_STREAMABLE:
-                self.console.print(f"[red]Can't stream[/] {item.title} ({item.id})")
+                self.console.print(f"[error]Can't stream[/] {item.title} ({item.id})")
             case DownloadStatus.SKIPPED_VIDEO_FILTER:
                 self.console.print(
                     f"Skipping '{item.title}' due to video filter set to '{result.reason}'"
                 )
             case DownloadStatus.SKIPPED_ATMOS_FILTER:
                 self.console.print(
-                    f"[blue]Skipping[/] [gray]{item.title}[/] [blue]due to Dolby Atmos filter[/] {result.reason}"
+                    f"[info]Skipping[/] [text]{item.title}[/] [dim_info]due to Dolby Atmos filter[/] {result.reason}"
                 )
             case DownloadStatus.FAILED:
                 self.console.print(
-                    f"[red]Error [{vibrant_color(item)}]{item.title}[/] - {result.reason}"
+                    f"[error]Error [{vibrant_color(item)}]{item.title}[/] - {result.reason}"
                 )
 
 
@@ -198,13 +198,13 @@ class ErrorReporter:
     def plan_error(self, error: PlanError) -> None:
         if error.kind is PlanErrorKind.TEMPLATE:
             self.console.print(
-                f"[red]Wrong Album Template:[/] {error.exc} ({error.context})"
+                f"[error]Wrong Album Template:[/] {error.exc} ({error.context})"
             )
             return
         self.failure(error.exc, error.context)
 
     def failure(self, exc: Exception, context: str) -> None:
         label = "API Error" if isinstance(exc, ApiError) else "Error"
-        self.console.print(f"[red]{label}:[/] {exc} ({context})")
+        self.console.print(f"[error]{label}:[/] {exc} ({context})")
         if self.raise_errors:
             raise exc
