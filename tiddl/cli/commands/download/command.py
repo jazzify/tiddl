@@ -12,6 +12,7 @@ from tiddl.core.models.downloader import (
     ItemPipelineOptions,
     PlanOptions,
 )
+from tiddl.core.models.tidal.resources import TidalResource
 from tiddl.core.settings import CONFIG
 from tiddl.core.types import (
     ChoiceFilterArtistSingles,
@@ -37,7 +38,50 @@ download_command.add_typer(search_subcommand)
 log = getLogger(__name__)
 
 
-@download_command.callback(no_args_is_help=True)
+def add_resource_to_download(resources: list[TidalResource] | None, **kwargs):
+    if not resources:
+        return typer.Exit()
+
+    asyncio.run(
+        download_resources(
+            obj=kwargs["obj"],
+            resources=resources,
+            config=CONFIG,
+            download_options=DownloadOptions(
+                threads_count=kwargs["threads_count"],
+                track_quality=kwargs["track_quality"],
+                video_quality=kwargs["video_quality"],
+                videos_filter=kwargs["videos_filter"],
+                skip_existing=not kwargs["skip_existing"],
+                download_path=kwargs["download_path"],
+                scan_path=kwargs["scan_path"],
+                match_existing_path_case=CONFIG.download.match_existing_path_case,
+                atmos_filter=kwargs["dolby_atmos_filter"],
+            ),
+            plan_options=PlanOptions(
+                template=kwargs["template"],
+                track_quality=kwargs["track_quality"],
+                video_quality=kwargs["video_quality"],
+                videos_filter=kwargs["videos_filter"],
+                singles_filter=kwargs["singles_filter"],
+                download_path=kwargs["download_path"],
+            ),
+            pipeline_options=ItemPipelineOptions(
+                metadata_enable=CONFIG.metadata.enable,
+                metadata_lyrics=CONFIG.metadata.lyrics,
+                metadata_cover=CONFIG.metadata.cover,
+                write_lrc_file=CONFIG.download.write_lrc_file,
+                update_mtime=CONFIG.download.update_mtime,
+                rewrite_metadata=kwargs["rewrite_metada"],
+            ),
+            raise_errors=kwargs["raise_errors"],
+        )
+    )
+
+
+@download_command.callback(
+    no_args_is_help=True, result_callback=add_resource_to_download
+)
 def download_callback(
     ctx: Context,
     track_quality: Annotated[
@@ -143,44 +187,5 @@ def download_callback(
     Remember that better quality tracks and videos consume more bandwidth and storage space. Choose wisely based on your needs and available resources.
 
     """
-
     ctx.invoke(refresh, EARLY_EXPIRE_TIME=600)
-
-    log.debug(f"{ctx.params=}")
-
-    ctx.call_on_close(
-        lambda: asyncio.run(
-            download_resources(
-                obj=ctx.obj,
-                config=CONFIG,
-                download_options=DownloadOptions(
-                    threads_count=threads_count,
-                    track_quality=track_quality,
-                    video_quality=video_quality,
-                    videos_filter=videos_filter,
-                    skip_existing=not skip_existing,
-                    download_path=download_path,
-                    scan_path=scan_path,
-                    match_existing_path_case=CONFIG.download.match_existing_path_case,
-                    atmos_filter=dolby_atmos_filter,
-                ),
-                plan_options=PlanOptions(
-                    template=template,
-                    track_quality=track_quality,
-                    video_quality=video_quality,
-                    videos_filter=videos_filter,
-                    singles_filter=singles_filter,
-                    download_path=download_path,
-                ),
-                pipeline_options=ItemPipelineOptions(
-                    metadata_enable=CONFIG.metadata.enable,
-                    metadata_lyrics=CONFIG.metadata.lyrics,
-                    metadata_cover=CONFIG.metadata.cover,
-                    write_lrc_file=CONFIG.download.write_lrc_file,
-                    update_mtime=CONFIG.download.update_mtime,
-                    rewrite_metadata=rewrite_metada,
-                ),
-                raise_errors=raise_errors,
-            )
-        )
-    )
+    ctx.params["obj"] = ctx.obj

@@ -59,6 +59,7 @@ def search(
 
     results: Search = ctx.obj.api.get_search(query=query)
     table = _prepare_table(query)
+    tidal_resources: list[TidalResource] = []
 
     results_to_display = []
     if results.topHit is not None:
@@ -66,15 +67,14 @@ def search(
         top_hit_type = top_hit.type.rstrip("S").lower()  # "ARTISTS" -> "artist"
         if top_hit_type in resource_types:
             if pick_top_hit:
-                ctx.obj.resources.append(
-                    TidalResource.from_string(
-                        f"{top_hit_type}/{_display_id(top_hit.value)}"
-                    )
-                )
                 console.print(
                     f"[success]Automatically added top hit: {top_hit.type.title()} '{_display_name(top_hit.value)}'"
                 )
-                return
+                return [
+                    TidalResource.from_string(
+                        f"{top_hit_type}/{_display_id(top_hit.value)}"
+                    )
+                ]
             else:
                 results_to_display.append(
                     (
@@ -92,26 +92,31 @@ def search(
         "video": results.videos.items,
     }
 
+    # TODO: Fix this closures
     for resource_type, items in type_to_items.items():
         if resource_type in resource_types:
             results_to_display.extend(
-                (resource_type.title(), _display_name(item), _display_id(item))
+                (
+                    resource_type.title(),
+                    _display_name(item),
+                    _display_id(item),
+                )  # TODO: can we unify ids?
                 for item in items[:number_top_results]
+                if _display_id(item)
+                not in [r[2] for r in results_to_display]  # remove duplicates
             )
 
     for i, (resource_type, name, id) in enumerate(results_to_display, start=1):
         table.add_row(str(i), resource_type, name, id)
 
-    panel = Panel(table, title="Search Results", highlight=True, expand=True)
-    console.print(panel)
+    console.print(Panel(table, title="Search Results", highlight=True, expand=True))
     selection = console.input(
         "[info]Enter the number of the resource to add to your list (comma-separated for multiple, q/empty = quit): "
     )
     selected_numbers = [s.strip() for s in selection.split(",")]
-
     for num in selected_numbers:
         if num.lower() == "q":
-            return
+            return []
 
         if not num.isdigit() or int(num) < 1 or int(num) > len(results_to_display):
             console.print(f"[error]Invalid selection: {num}")
@@ -119,10 +124,11 @@ def search(
 
         selected_resource = results_to_display[int(num) - 1]
         resource_type, name, id = selected_resource
-        ctx.obj.resources.append(
+        tidal_resources.append(
             TidalResource.from_string(f"{resource_type.lower()}/{id}")
         )
         console.print(f"[success]Added {resource_type} '{name}' to your list")
+    return tidal_resources
 
 
 def _display_name(item) -> str:
@@ -134,8 +140,7 @@ def _display_name(item) -> str:
         return f"{item.artist or item.artists[0].name or ''} - {item.title} [dim_info][{', '.join(item.audioModes)}][/]"
     elif isinstance(item, (Playlist)):
         return item.title
-    else:
-        raise ValueError("Unknown item type")
+    raise ValueError("Unknown item type")
 
 
 def _display_id(item) -> str:

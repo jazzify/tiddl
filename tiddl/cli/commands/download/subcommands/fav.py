@@ -29,18 +29,17 @@ def fav(
 
     favorites = ctx.obj.api.get_favorites()
     favorites_dict = favorites.model_dump()
+    tidal_resources: list[TidalResource] = []
 
-    stats: dict[ResourceTypeLiteral, int] = dict()
-
+    stats: dict[ResourceTypeLiteral, int] = {}
     for resource_type in cast(list[ResourceTypeLiteral], TYPES):
         resources = favorites_dict[resource_type.upper()]
-
         stats[resource_type] = len(resources)
-
         for resource_id in resources:
-            ctx.obj.resources.append(TidalResource(id=resource_id, type=resource_type))
+            tidal_resources.append(TidalResource(id=resource_id, type=resource_type))
 
-    console.print(f"[success]Loaded {len(ctx.obj.resources)} resources")
-
+    console.print(f"[success]Loaded {len(tidal_resources)} resources")
     for resource_type, count in stats.items():
         console.print(f"{resource_type.title()}s: {count}")
+
+    return tidal_resources

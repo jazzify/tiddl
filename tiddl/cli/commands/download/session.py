@@ -12,19 +12,21 @@ from tiddl.core.models.downloader import (
     PlanOptions,
 )
 from tiddl.core.models.settings import Config
+from tiddl.core.models.tidal.resources import TidalResource
 
 from .output import ErrorReporter, RichOutput
 
 
 async def download_resources(
     obj: ContextObject,
+    resources: list[TidalResource],
     config: Config,
     download_options: DownloadOptions,
     plan_options: PlanOptions,
     pipeline_options: ItemPipelineOptions,
     raise_errors: bool,
 ) -> None:
-    """Download `obj.resources`, showing progress and errors in the console."""
+    """Download `resources`, showing progress and errors in the console."""
 
     rich_output = RichOutput(console)
     error_reporter = ErrorReporter(console, raise_errors)
@@ -56,6 +58,6 @@ async def download_resources(
         console=console,
         transient=True,
     ):
-        await runner.run(obj.resources)
+        await runner.run(resources)
 
     rich_output.show_stats()

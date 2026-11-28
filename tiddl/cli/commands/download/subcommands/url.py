@@ -2,7 +2,6 @@ from typing import Annotated
 
 import typer
 
-from tiddl.cli.ctx import Context
 from tiddl.core.models.tidal.resources import TidalResource
 
 url_subcommand = typer.Typer()
@@ -12,7 +11,6 @@ url_subcommand = typer.Typer()
     no_args_is_help=True,
 )
 def url(
-    ctx: Context,
     urls: Annotated[
         list[TidalResource], typer.Argument(parser=TidalResource.from_string)
     ],
@@ -25,5 +23,4 @@ def url(
 
     Available resource types: track, video, album, playlist, artist, mix.
     """
-
-    ctx.obj.resources.extend(urls)
+    return urls
